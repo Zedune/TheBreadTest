@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>The Bread Test</title>
+    <style>
+        @keyframes wobble {
+            0%, 100% {
+                transform: rotate(-10deg);
+            }
+            50% {
+                transform: rotate(10deg);
+            }
+        }
+
+        .wobble {
+            display: inline-block;
+            animation: wobble 1s infinite;
+            position: absolute; /* Positioning the image */
+            bottom: 5%; /* Adjust as needed */
+            left: 5%; /* Adjust as needed */
+            transform: translate(-50%, -50%); /* Center the image */
+            width: 600px; /* Set the width */
+            height: auto; /* Maintain aspect ratio */
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        form {
+            display: inline-block;
+        }
+        .question {
+            display: none;
+        }
+        .question.active {
+            display: block;
+        }
+        .results {
+            display: none;
+        }
+        .buttons {
+            margin-top: 20px;
+        }
+        .buttons button {
+            margin: 0 10px;
+        }
+        .menu {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .menu button {
+            margin-top: 20px;
+        }
+        .result-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .result-column {
+            width: 45%;
+        }
+        .result-column p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <h1>The Bread Test</h1>
+        <h3>The ALP's project on personality archetypes and learning models.... BREADIFIED :D</h3>
+        <button onclick="startQuiz()">Start Quiz</button>
+    </div>
+    <div class="quiz" style="display: none;">
+        <h1>The Questions :P</h1>
+        <form id="quizForm"></form>
+        <div class="buttons">
+            <button type="button" onclick="prevQuestion()">Previous</button>
+            <button type="button" onclick="nextQuestion()">Next</button>
+            <button type="button" onclick="submitQuiz()">Submit</button>
+        </div>
+    </div>
+    <div id="result" class="results"></div>
+
+    <script>
+        const questions = [
+            { question: "When someone compliments me, I feel more motivated to complete work.<br>e.g. Someone compliments your hands or hair.", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-4, -2, 0, 2, 4], type: 'a' }, // Challah Questions
+            { question: "I find that I&#39;m easily affected by external things.<br>e.g. Thunderstorms, people whispering, pencil-sharpening noises.", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-4, -2, 0, 2, 4], type: 'a' },
+            { question: "I find that my impulsiveness annoys me in classroom settings.<br>e.g. Performing certain actions that are unexpected, or discussing topics that are completely different to the current conversation.", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'a' },
+            { question: "I find it necessary to have a sense of harmony within social groups.<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'a' },
+
+            { question: "I think that my peers take things too seriously.<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-4, -2, 0, 2, 4], type: 'b' }, // Sourdough
+            { question: "I seek to understand different perspectives.<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'b' },
+            { question: "I perceive myself as diligent when completing school work.<br>e.g. Not looking at your phone so you&#39;re not distracted", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'b' },
+            { question: "I am always in the present and never think about the past or the future.<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-4, -2, 0, 2, 4], type: 'b' },
+
+            { question: "I am academically average.<br>Essay writing, maths, science, creating art, music, etc.", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-4, -2, 0, 2, 4], type: 'c' }, // White Bread
+            { question: "I work to enhance my academic ability.<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'c' },
+            { question: "I find that other people relate to my experiences.<br>Common struggle (within a friend group) with writing English essays", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-4, -2, 0, 2, 2], type: 'c' },
+            { question: "I fear that I will stand out from the rest.<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'c' },
+
+            { question: "I feel excited and motivated when presented with a new, challenging topic in class.<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-4, -2, 0, 2, 4], type: 'd' }, // Banana Bread
+            { question: "At the end of the day, change and unfamiliarity is what drives my improvement both inside and outside the classroom<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'd' },
+            { question: "I tend to use my free time to explore a new hobby or activity <br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-4, -2, 0, 2, 4], type: 'd' },
+            { question: "I enjoy applying different learning techniques to my study, and ask my friends about their learning styles<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'd' },
+
+            { question: "I often question rules or instructions that don't seem fair or logical to me.<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-4, -2, 0, 2, 4], type: 'e' }, // Bagel
+            { question: "I often find myself drawn to stories or characters that break the rules or challenge what is considered acceptable in their respective contexts.<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'e' },
+            { question: "I&#39;m more motivated when I&#39;m given the freedom to approach a task in my own way <br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'e' },
+            { question: "I often clash with teachers, other students, and especially those in positions of authority in topics that matter to me.<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-4, -2, 0, 2, 4], type: 'e' },
+
+            { question: "I am drawn to subjects that involve exploration of the unknown or hypothetical, including science subjects such as physics, engineering, and technology.<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'f' }, // Flatbread
+            { question: "I am fascinated by the idea of turning dreams or ideas into reality.<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-4, -2, 0, 2, 4], type: 'f' },
+            { question: "I believe that ideas and imagination have a greater potential to bring about change than practical, step-by-step approaches.<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-4, -2, 0, 2, 4], type: 'f' },
+            { question: "I am good at seeing connections between ideas or concepts that other people may not notice<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'f' },
+
+            { question: "I am usually the first to volunteer when the teacher asks a question <br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'g' }, // Rye Bread
+            { question: "I strive to be a role model for my fellow peers, inspiring them through my words and actions<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-4, -2, 0, 2, 4], type: 'g' },
+            { question: "I am often the leader of a group project or a discussion because I have a reputation for organisation<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'g' },
+            { question: "I am motivated by my desire to make a positive difference both inside and outside the classroom<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-4, -2, 0, 2, 4], type: 'g' },
+
+            { question: "I naturally take the lead in group projects or activities because I like being in control<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-4, -2, 0, 2, 4], type: 'h' }, // Baguette
+            { question: "I believe it is important to have clear rules and goals to achieve success <br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'h' },
+            { question: "I feel confident making decisions, even if others are unsure or hesitant<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'h' },
+            { question: "I&#39;m good at organising things and making sure everyone knows what they need to do<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-4, -2, 0, 2, 4], type: 'h' },
+
+            { question: "I feel happiest when I'm able to express myself creatively, like through art, music, or writing<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-4, -2, 0, 2, 4], type: 'i' }, // Croissant
+            { question: "I get bored easily with routine and prefer activities that let me explore new ideas<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'i' },
+            { question: "I often think about how to make things more interesting or original for projects<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-4, -2, 0, 2, 4], type: 'i' },
+            { question: "I believe that art and creativity can change the way people see the world<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'i' },
+
+            { question: "I like to understand how things work and often ask a lot of questions to get to the bottom of things <br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'j' }, // Barley Bread
+            { question: "I prefer to think things through carefully before making decisions, rather than just going with the flow<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'j' },
+            { question: "I enjoy researching and learning about topics that interest me, even outside of school<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-4, -2, 0, 2, 4], type: 'j' },
+            { question: "I value learning and often find myself sharing interesting facts or insights with others<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-4, -2, 0, 2, 4], type: 'j' }, 
+
+            { question: "I tend to agree with and accept feedback to avoid conflict<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-4, -2, 0, 2, 4], type: 'k' }, // Cinnamon Roll
+            { question: "I prefer clear and simple tasks rather than ones that are complex or challenging<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'k' },
+            { question: "I avoid discussing controversial topics with peers<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-4, -2, 0, 2, 4], type: 'k' },
+            { question: "I find comfort in familiar and routine activities and feel uneasy when faced with too much change<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'k' },
+
+            { question: "I often help classmates with their work, even if it&#39;s not requested.<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'l' }, // Breadsticks
+            { question: "I feel responsible for the well-being and contribution of everyone in a group task what<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'l' },
+            { question: "I am willing to sacrifice my time to help others understand a difficult concept.<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-4, -2, 0, 2, 4], type: 'l' },
+            { question: "I am willing to go out of my way to make sure others are emotionally okay<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-4, -2, 0, 2, 4], type: 'l' },
+
+            { question: "I like to colour-code things to help.<br>e.g colour coding timetable, colour coding subjects", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'm' }, // A -
+            { question: "I find that I learn better when listening to a powerpoint presentation compared to reading extracts from textbooks.<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'n' },
+            { question: "I prefer having my teacher draw out diagrams and discuss the concepts rather than making students write notes.<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'o' },
+            
+            { question: "I work best when I can process information by building models and performing experiments<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'm' }, // B -
+            { question: "I find myself fidgeting with or touching others when trying to focus<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'p' },
+            { question: "I learn better when I set my notes to music<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'q' },
+
+            { question: "I enjoy making presentations with other people and customising the presentations<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'n' }, // C -
+            { question: "I learn best when I can work with others and actively engage in hands-on tasks.<br>E.g. writing essays without being fully prepared, conducting science experiments to consolidate knowledge", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'p' },
+            { question: "I find that I reach a deeper understanding when having a logical argument/conversation with others <br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'r' },
+
+            { question: "I explain concepts using visual diagrams and talk out loud while I’m revising.<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'o' }, // D -
+            { question: "I enjoy studying because I can read many different texts, and write personally.<br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'q' },
+            { question: "To revise for an exam, I recite information to others using palm cards and notes <br>", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-2, -1, 0, 1, 2], type: 'r' },
+        ];
+
+        let currentQuestionIndex = 0;
+
+        function startQuiz() {
+            document.querySelector('.menu').style.display = 'none';
+            document.querySelector('.quiz').style.display = 'block';
+            loadQuiz();
+        }
+
+        function loadQuiz() {
+            const quizForm = document.getElementById('quizForm');
+            questions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                questionDiv.innerHTML = `<label>${index + 1}. ${q.question}</label><br>`;
+                q.options.forEach((option, i) => {
+                    questionDiv.innerHTML += `<input type="radio" name="q${index}" value="${q.scores[i]}" data-type="${q.type}"> ${option}<br>`;
+                });
+                questionDiv.innerHTML += `<br>`;
+                quizForm.appendChild(questionDiv);
+            });
+            showQuestion(currentQuestionIndex);
+        }
+
+        function showQuestion(index) {
+            const questions = document.querySelectorAll('.question');
+            questions.forEach((q, i) => {
+                q.classList.remove('active');
+                if (i === index) {
+                    q.classList.add('active');
+                }
+            });
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                showQuestion(currentQuestionIndex);
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                showQuestion(currentQuestionIndex);
+            }
+        }
+
+        function submitQuiz() {
+            let scores = { a: 0, b: 0, c: 0, d: 0, e: 0, f: 0, g: 0, h: 0, i: 0, j: 0, k: 0, l: 0, m: 0, n: 0, o: 0, p: 0, q: 0, r: 0, };
+            questions.forEach((q, index) => {
+                const selectedOption = document.querySelector(`input[name="q${index}"]:checked`);
+                if (selectedOption) {
+                    scores[q.type] += parseInt(selectedOption.value);
+                }
+            });
+
+            const A = (scores.m - scores.p + scores.n)/2;
+            const B = (scores.p + scores.m - scores.n)/2;
+            const C = (scores.r - scores.o + scores.n)/2;
+            const D = (scores.r - scores.p + scores.q)/2;
+
+            const comparisons = [
+                { name: 'Vi', value: A },
+                { name: 'K', value: B },
+                { name: 'I', value: C },
+                { name: 'Ve', value: D }
+            ];
+
+            comparisons.sort((x, y) => y.value - x.value);
+
+            const scoreComparisons = [
+                { name: 'Challah', value: scores.a },
+                { name: 'Sourdough', value: scores.b },
+                { name: 'White Bread', value: scores.c },
+                { name: 'Banana Bread', value: scores.d },
+                { name: 'Bagel', value: scores.e },
+                { name: 'Flatbread', value: scores.f },
+                { name: 'Rye Bread', value: scores.g },
+                { name: 'Baguette', value: scores.h },
+                { name: 'Croissant', value: scores.i },
+                { name: 'Barley Bread', value: scores.j },
+                { name: 'Cinnamon Roll', value: scores.k },
+                { name: 'Breadsticks', value: scores.l }
+            ];
+
+            scoreComparisons.sort((x, y) => y.value - x.value);
+
+            document.querySelector('.quiz').style.display = 'none';
+            document.querySelector('.results').style.display = 'block';
+
+            const resultContainer = document.createElement('div');
+            resultContainer.className = 'result-container';
+
+            const leftColumn = document.createElement('div');
+            leftColumn.className = 'result-column';
+            const rightColumn = document.createElement('div');
+            rightColumn.className = 'result-column';
+
+            switch (comparisons[0].name) {
+                case 'Vi':
+                    leftColumn.innerHTML = 
+                        `<h2>Type: ${scoreComparisons[0].name}-Vi</h2>
+                        <h3>Highest Learning Model: Visual Learner</h3>
+                        <p>Visual learners work best when activities are engaged by images, charts, or visual material. They think through images rather than words when working through activities, often finding it easier to see the bigger picture. Visual learners are encouraged to create mind maps, drawings, or diagrams of information that needs to be memorised and to construct a visual representation of information being taught in classrooms. Visual learners may struggle to memorise smaller details or read paragraphs for a long duration.</p>
+                        <img src="Images/${scoreComparisons[0].name}.png" alt="Wobbling Image" class="wobble">`;
+                    break;
+                case 'K':
+                    leftColumn.innerHTML = 
+                        `<h2>Type: ${scoreComparisons[0].name}-K</h3>
+                        <h3>Highest Learning Model: Kinesthetic Learner</h3>
+                        <p>This learning style is hands-on, practical, and movement-oriented. These learners prefer physical, direct interaction with learning materials. They perform at their best when given the opportunity to &#39;do&#39; rather than listen or watch. In the classroom, these learners thrive through hands-on activities such as experiments, building models, or mapping out concepts using hand-drawn diagrams. They are likely to struggle in classroom settings which involve lectures and videos that go on for a long period of time. In these cases, they may become inattentive in class or even disruptive.</p>
+                        <img src="Images/${scoreComparisons[0].name}.png" alt="Wobbling Image" class="wobble">`;
+                    break;
+                case 'I':
+                    leftColumn.innerHTML = 
+                        `<h2>Type: ${scoreComparisons[0].name}-I</h2>
+                        <h3>Highest score is C with a value of ${comparisons[0].value}.</h3>
+                        <p>Social and collaborative, interpersonal learners enjoy working in groups and discussing ideas as a class. They excel when given opportunities to engage in debates, teamwork, and collaborative problem-solving activities. They often take leadership roles in group settings and enjoy helping others understand concepts. Given their highly social learning style, these learners are easily distracted and can become sidetracked easily when working with peers. Additionally, they may struggle in individual tasks or exam settings.</p>
+                        <img src="Images/${scoreComparisons[0].name}.png" alt="Wobbling Image" class="wobble">`;
+                    break;
+                case 'Ve':
+                    leftColumn.innerHTML = 
+                        `<h2>Type: ${scoreComparisons[0].name}-Ve</h2>
+                        <h3>Highest score is D with a value of ${comparisons[0].value}.</h3
+                        <p>These learners enjoy learning through both written and spoken words. Naturally drawn to language, they excel in activities like reading, writing essays, storytelling, and engaging in debates. Learning techniques such as mnemonics, creating videos, and reciting palm cards work really well with these learners. Verbal-Linguistic learners dislike silence, and mathematics is probably their natural enemy.</p>
+                        <img src="Images/${scoreComparisons[0].name}.png" alt="Wobbling Image" class="wobble">`;
+                    break;
+            }
+
+            switch (scoreComparisons[0].name) {
+                case 'Challah':
+                    rightColumn.innerHTML = 
+                        `<h2>Challah</h2>
+                        <p>Challah archetypes are often the centre of their friend groups, always willing to lend an ear, offer support, or share a laugh. In class, these students are not afraid to share their feelings or thoughts, especially in discussions that involve personal reflections or topics that resonate with them emotionally. They take pride in creating work that is not only correct but also beautiful and meaningful, they may decorate their assignments with extra flair or put thought into making presentations visually appealing. Their desire to connect can drive them to participate actively, especially in group activities that involve personal sharing but can sometimes become distracted by friends and conversations over time. Their deep investment in relationships can lead to them blurring boundaries, such as oversharing or taking others&#39; emotional burdens.</p>
+                        <h3>Similar:</h3>
+                        <p>Sourdough: Challah&#39;s emphasis on building deep, meaningful relationships aligns well with Sourdough&#39;s ability to bring joy and light-heartedness, creating a classroom environment where emotional connections are strengthened through shared laughter and fun.</p>
+                        <p>Rye Bread: Challah&#39;s nurturing approach complements Rye Bread&#39;s protective instincts, fostering a classroom atmosphere where students feel both supported and inspired to take on challenges together, with a blend of care and courage.</p>
+                        <h3>Opposites:</h3>
+                        <p>Cinnamon Roll: While Challah seeks deep emotional connections, Cinnamon Roll prefers to keep things light and simple. This difference can lead to misunderstandings in the classroom when Challah pushes for more depth than Cinnamon Roll is comfortable with.</p>
+                        <p>Barley Bread: Challah&#39;s focus on emotions and relationships may conflict with Barley Bread&#39;s preference for logic and objectivity, resulting in differing approaches to group work or class discussions, where Challah values personal connection and Barley Bread prioritises intellectual analysis.</p>`;
+                        break;
+                case 'Sourdough':
+                    rightColumn.innerHTML = 
+                        `<h2>Sourdough</h2>
+                        <p>Sourdough archetypes are students who love cracking jokes or making funny remarks. They enjoy making others laugh and are quick to spot the lighter side of any situation. They prefer interactive, fun lessons that allow them to express themselves. While they are not necessarily rebellious in a serious way, Sourdough questions rules and norms through humour. Their playful nature can encourage other students to engage more, especially in otherwise dull or intimidating activities. However, Sourdough can be quite disruptive in class with their antics, making it difficult for others to focus or for the teacher to maintain control. They may struggle to take things seriously, especially when faced with assignments or topics that require a more genuine approach.</p>
+                        <h3>Similar:</h3>
+                        <p>Challah: Sourdough&#39;s humour and playfulness complement Challah&#39;s desire for emotional connections, creating a lively classroom environment where friendships are strengthened through shared laughter and fun interactions.</p>
+                        <p>White Bread: Both Sourdough and White Bread value inclusivity and connection. Sourdough uses humour to engage with others, while White Bread&#39;s relatability makes everyone feel included, fostering a welcoming and light-hearted classroom dynamic.</p>
+                        <h3>Opposites:</h3>
+                        <p>Banana Bread: Sourdough&#39;s focus on fun and entertainment can clash with Banana Bread&#39;s desire for meaningful adventures and new experiences, leading to different priorities in how they engage with classroom activities.</p>
+                        <p>Barley Barley: Sourdough&#39;s playful nature might disrupt Barley Bread&#39;s focus on deep learning and reflection, leading to friction when Sourdough seeks to lighten the mood while the Sage is more intent on serious study or thoughtful discussions.</p>`;
+                    break;
+                case 'White Bread':
+                    rightColumn.innerHTML = 
+                        `<h2>White Bread</h2>
+                        <p>White Bread archetypes value connections and friendly relationships within classroom environments. This is because of their approachability due to their non-judgmental nature and how they include everyone. White Bread archetypes usually prefer more concrete concepts and examples over abstract ones, which is great for practicality but usually lacks creativity. Teachers and peers can count on them to be dependable and to handle responsibilities effectively but would try to avoid situations where they can be given responsibility. This is because their preference for fitting in leads them to shy away from leadership positions or standing out. To keep the peace and avoid conflict, they might steer clear of controversial topics, which can limit their engagement in important debates or situations.</p>
+                        <h3>Similar:</h3>
+                        <p>Sourdough: White Bread&#39;s approachable and relatable nature pairs well with Sourdough&#39;s humour, making the classroom feel inclusive and engaging, as both enjoy connecting with peers in an easy-going and friendly manner.</p>
+                        <p>Breadsticks: Both White Bread and Breadsticks focus on creating a supportive environment. White Bread&#39;s desire for harmony complements Breadsticks&#39;s nurturing approach, resulting in a classroom where students feel safe, understood, and part of a cohesive group.</p>
+                        <h3>Opposites:</h3>
+                        <p>Banana Bread: White Bread&#39;s preference for routine and familiarity may conflict with Banana Bread&#39;s constant search for new experiences and change, leading to differing attitudes towards classroom activities that involve stepping out of comfort zones.</p>
+                        <p>Bagel: White Bread&#39;s inclination to follow rules and maintain peace contrasts with Bagel&#39;s rebellious nature, which often challenges norms. This difference can lead to tension in the classroom when White Bread seeks stability and Bagel disrupts it.</p>`;
+                    break;
+                case 'Banana Bread':
+                    rightColumn.innerHTML = 
+                        `<h2>Banana Bread</h2>
+                        <p>Banana Bread students are curious and love to learn new things beyond the classroom, trying different activities and new challenges, preferring to work independently and often take the lead in their own learning. Their adventurous spirit helps them come up with creative solutions and helps them to better handle change. However, their curiosity and drive to learn new things result in them finding routine tasks becoming boring, getting distracted by new interests, and potentially taking on too many of their interests at once.</p>
+                        <h3>Similar:</h3>
+                        <p>Barley Bread: Banana Bread&#39;s love for adventure and new experiences aligns well with Barley Bread&#39;s quest for knowledge. Together, they can create an engaging learning environment, driven by curiosity and a desire to discover new insights.</p>
+                        <p>Bagel: Both Banana Bread and Bagel are drawn to breaking boundaries and questioning norms. Banana Bread seeks new experiences, while Bagel challenges rules, making them a bold pair in pushing the limits of classroom projects and ideas.</p>
+                        <h3>Opposites:</h3>
+                        <p>White Bread: Banana Bread&#39;s drive for adventure and novelty can conflict with White Bread&#39;s preference for comfort and routine, leading to differing attitudes toward change and risk in classroom activities.</p>
+                        <p>Sourdough: Banana Bread&#39;s focus on seeking meaningful experiences may clash with the Sourdough&#39;s playful, lighthearted approach, potentially causing friction when Banana Bread wants depth and the Sourdough prioritises fun.</p>`;
+                    break;
+                case 'Bagel':
+                    rightColumn.innerHTML = 
+                        `<h2>Bagel</h2>
+                        <p>Bagel archetypes in the classroom are students who like to challenge the rules and think differently. They don&#39;t enjoy being told what to do and often question why things are done a certain way. Bagel is an independent thinker who want to push boundaries and question what’s considered “normal.” This can make them creative problem solvers, but it can also lead to conflicts with teachers or classmates when they don’t follow the rules. They work best in environments where they have more flexibility with deadlines and assignment choices, and have trouble with structured lessons.</p>
+                        <h3>Similar:</h3>
+                        <p>Flatbread: Bagel and Flatbread both enjoy challenging the status quo; Bagel disrupts norms, while Flatbread transforms situations with innovative thinking. Together, they can bring about significant change in the classroom through bold and creative problem-solving.</p>
+                        <p>Banana Bread: Both Bagel and Banana Bread thrive on breaking boundaries—Bagel through rebellion and Banana Bread through new experiences. In the classroom, they push limits and encourage their peers to question established norms.</p>
+                        <h3>Opposites:</h3>
+                        <p>White Bread: Bagel&#39;s rebellious nature conflicts with White Bread&#39;s desire to fit in and maintain harmony. This contrast can lead to tension when Bagel challenges rules that White Bread prefers to follow.</p>
+                        <p>Breadsticks: Bagel&#39;s disruptive tendencies often clash with Breadsticks&#39;s focus on providing stability and support. In the classroom, Breadsticks may struggle to maintain order while Bagel pushes against it.</p>`;
+                    break;
+                case 'Flatbread':
+                    rightColumn.innerHTML = 
+                        `<h2>Flatbread</h2>
+                        <p>In a classroom setting, the Flatbread archetype is the student who always finds innovative ways to solve problems, often surprising teachers and peers with their unique perspective. They&#39;re the ones who turn a standard project into something extraordinary, using creativity and insight to transform ordinary assignments into magical outcomes. Flatbread thrives on exploring new concepts and enjoy experimenting with ideas that others might find unconventional. However, their focus on transformation and change can sometimes make them appear unpredictable and impractical. They may overlook details or the practical steps needed to implement their grand ideas, leading to frustration among peers. Their tendency to challenge norms and push boundaries can also create tension with students who prefer more structured and conventional approaches, making collaboration challenging at times.</p>
+                        <h3>Similar:</h3>
+                        <p>Rye Bread: Flatbread&#39;s innovative thinking pairs well with Rye Bread&#39;s action-oriented nature. Together in the classroom, they can inspire others through a blend of creativity and courage, tackling challenges with a mix of bold ideas and decisive actions.</p>
+                        <p>Bagel: Both the Flatbread and Bagel enjoy challenging the status quo—Flatbread through transformation and the Outlaw through rebellion. In class, they can shake things up by questioning norms and introducing new, unconventional ideas, often driving change together.</p>
+                        <h3>Opposites:</h3>
+                        <p>Baguette: Flatbread&#39;s desire for transformation can clash with Baguette&#39;s need for order and control. In the classroom, Flatbread&#39;s unpredictable nature may disrupt Baguette&#39;s structured plans, leading to disagreements over how to approach group work or manage tasks.</p>
+                        <p>Croissant: While both are creative, Flatbread focuses on transformation and practical results, whereas Croissant prioritises personal expression and exploration. This difference can lead to conflicts in group projects, as Flatbread pushes for innovation while Croissant seeks creative freedom.</p>`;
+                    break;
+                case 'Rye Bread':
+                    rightColumn.innerHTML = 
+                        `<h2>Rye Bread</h2>
+                        <p>Rye Bread archetypes are driven by their desire for personal achievement and deep sense of responsibility. They tackle problems head-on and take the lead in group settings. Rye Bread students have a strong internal drive and sense of purpose, making them natural leaders. However, this can make them focus on personal achievements rather than collaboration, and they become frustrated when they do not meet their own standards. Teachers and peers can rely on Rye Bread to take initiative without avoiding uncomfortable situations. However, they are competitive and can sometimes overshadow others even though their contributions are equally valuable. Their focus on all-round excellence is good, but this can lead to burnout if they feel like they are failing to meet their high standards.</p>
+                        <h3>Similar:</h3>
+                        <p>Challah: Rye Bread&#39;s drive to take action and protect others aligns well with Challah&#39;s focus on building strong emotional connections, resulting in a supportive classroom dynamic where students feel encouraged and motivated to succeed together.</p>
+                        <p>Flatbread: Rye Bread&#39;s courage pairs nicely with Flatbread&#39;s innovative thinking. Together, they can tackle challenges in the classroom with a combination of bold action and creative problem-solving, inspiring others to think outside the box.</p>
+                        <h3>Opposites:</h3>
+                        <p>Croissant: Rye Bread&#39;s action-oriented nature may clash with Croissant&#39;s need for creative freedom and introspection, leading to differing approaches in how they tackle assignments or projects, with the Rye Bread favouring direct action and Croissant seeking more personal expression.</p>
+                        <p>Cinnamon Roll: Rye Bread&#39;s desire to face challenges and take risks might conflict with Cinnamon Roll&#39;s preference for staying in safe and familiar territory, resulting in differing attitudes toward taking bold steps in classroom activities or social interactions.</p>`;
+                    break;
+                case 'Baguette':
+                    rightColumn.innerHTML = 
+                        `<h2>Baguette</h2>
+                        <p>Baguette archetypes have a strong sense of responsibility when placed in groups or contributing to the lesson. They value control and order in classroom environments and try to prevent chaos even if that is not their obligation. This can cause them to leave a lasting impact on their classmates, teachers and school (some may say they “peaked” in high school). Baguette exudes confidence in their ability to make decisions even when under pressure. However, their need for control can lead to the inability to delegate tasks to others. This can lead to stubbornness, resistance to change and struggle to listen to others&#39; ideas especially when in a group setting. The archetype opposite to the Baguette is the Bagel, who challenges rules and can be a disruption to other students’ learning.</p>
+                        <h3>Similar:</h3>
+                        <p>Croissant: Baguette&#39;s structure helps Croissant by providing clear guidelines for projects, allowing creative ideas to flourish within an organised framework.</p>
+                        <p>Breadsticks: Baguette&#39;s focus on rules pairs well with Breadstick&#39;s supportive nature, creating a balanced environment with clear expectations and emotional support.</p>
+                        <h3>Opposites:</h3>
+                        <p>Flatbread: Baguette&#39;s need for control can clash with Flatbread&#39;s preference for innovative methods, potentially causing friction over classroom approaches.</p>
+                        <p>Rye Bread: Baguette&#39;s emphasis on order may conflict with the Rye Bread&#39;s drive for bold, unconventional actions, leading to disagreements on leadership and problem-solving strategies.</p>`;
+                    break;
+                case 'Croissant':
+                    rightColumn.innerHTML = 
+                        `<h2>Croissant</h2>
+                        <p>Croissant archetypes are deeply creative individuals who see the world optimistically and through a lens of possibilities. They are constantly inspired by their surroundings and have a vivid imagination that fuels their work. Croissants are driven by the need to express themselves and communicate their inner world, this can cause them to enjoy subjects like visual art, English, music and TAS because it allows them to channel their creativity. However, they tend to be perfectionists and can struggle to finish projects because they are never fully satisfied with the results. They may also struggle to take criticism because they perceive it personally or become overwhelmed by their emotions. The Baguette archetype would be the opposite of the Croissant. This is because Baguette tends to value control over creativity and strive to prevent chaos, unlike Croissant who embraces chaos.</p>
+                        <h3>Similar:</h3>
+                        <p>Baguette: Croissant appreciates Baguette&#39;s structure, as it provides the necessary boundaries to help shape their creative ideas, leading to effective collaboration in projects.</p>
+                        <p>Cinnamon Roll: Both Croissant and Cinnamon Roll enjoy exploring new perspectives. Croissant's creativity and Cinnamon Roll&#39;s optimism make for a dynamic duo, bringing fresh ideas into classroom activities.</p>
+                        <h3>Opposites:</h3>
+                        <p>Challah: Croissant&#39;s focus on individual expression may conflict with Challah&#39;s desire for deep emotional connections, leading to differing priorities in group work and social interactions.</p>
+                        <p>Rye Bread: Croissant values creative freedom and self-expression, which may clash with Rye Bread&#39;s action-oriented approach and focus on goals, potentially leading to differing views on how to tackle classroom challenges.</p>`;
+                    break;
+                case 'Barley Bread':
+                    rightColumn.innerHTML = 
+                        `<h2>Barley Bread</h2>
+                        <p>Barley Bread archetypes are driven by a deep thirst for knowledge and constantly seek to expand their knowledge. They prioritise logic and reason, strive to remain objective and are often analytical in their approach to problem-solving. This allows them to find it easy to break down complex problems. Barley Bread tends to be patient in their pursuit of truth and rarely rushes to conclusions, allowing them to make well-considered decisions and are more likely to consider others' points of view. However, they can come off as arrogant and condescending, especially if they see themselves as more knowledgeable than others, this can cause them to become detached from others and be perceived as lacking empathy. Sourdough has opposing characteristics to the Barley Bread. This is because Barley Bread prioritises seriousness over playfulness, and may find Sourdough’s impulsiveness annoying.</p>
+                        <h3>Similar:</h3>
+                        <p>Cinnamon Roll: Barley Bread&#39;s wisdom and knowledge complement Barley Bread&#39;s curiosity and positive outlook, creating a classroom dynamic where questions are welcomed and learning is encouraged.</p>
+                        <p>Banana Bread: Both Barley Bread and Banana Bread are driven by a desire for discovery. barley Bread seeks knowledge and understanding, while Banana Bread craves new experiences, making them a great pair for in-depth learning and exploration in the classroom.</p>
+                        <h3>Opposites:</h3>
+                        <p>Sourdough: Barley Bread&#39;s focus on serious intellectual pursuits may clash with Sourdough&#39;s playful nature, potentially leading to tension when Barley Bread wants to concentrate, and Sourdough wants to have fun.</p>
+                        <p>White Bread: Barley Bread&#39;s preference for deep, analytical thinking might conflict with White Bread&#39;s focus on practicality and fitting in, leading to different approaches to classroom discussions and group work.</p>`;
+                    break;
+                case 'Cinnamon Roll':
+                    rightColumn.innerHTML = 
+                        `<h2>Cinnamon Roll</h2>
+                        <p>Cinnamon Roll archetypes see the world and learn through a lens of hope and goodness, having a constant sunny and uplighting outlook. They trust their teachers and classmates easily, often following instructions without questions, and preferring to go with the flow rather than cause any disagreement. They thrive on positive reinforcement and may need encouragement or validation from teachers to feel secure. They naturally work well with others and help create a collaborative and supportive group dynamic. However, they may be sensitive to criticism or harsh feedback as they are not used to conflict or negativity. Moreover, because of their overly trusting nature, they can struggle to see when someone is taking advantage of them.</p>
+                        <h3>Similar:</h3>
+                        <p>Croissant: Cinnamon Roll&#39;s optimism and open-mindedness complement Croissant&#39;s creativity, making them a great pair for imaginative projects in the classroom where new ideas are welcomed and explored.</p>
+                        <p>Barley Bread: Cinnamon Roll&#39;s curiosity aligns well with Barley Bread&#39;s wisdom, creating a classroom dynamic where learning is joyful and questions are encouraged, fostering a supportive and enlightening environment.</p>
+                        <h3>Opposites:</h3>
+                        <p>Challah: Cinnamon Roll&#39;s preference for keeping things light and avoiding deeper issues can clash with Challah&#39;s desire for deep emotional connections, leading to different approaches to friendships and social interactions in class.</p>
+                        <p>Sourdough: While both Cinnamon Roll and Sourdough enjoy having fun, Cinnamon Roll&#39;s preference for staying within safe boundaries might conflict with Sourdough&#39;s tendency to push limits and create disruptions in the classroom.</p>`;
+                    break;
+                case 'Breadsticks':
+                    rightColumn.innerHTML = 
+                        `<h2>Breadsticks</h2>
+                        <p>Breadsticks archetypes are quick to lend a helping hand, whether it&#39;s helping a classmate understand a lesson, sharing supplies or volunteering for classroom tasks. These behaviours show their highly empathetic nature, leading them to be good at reading the room and responding to the needs of their peers. They provide a supportive classroom atmosphere, allowing them to be strong leaders and great team players. Although Breadsticks may take too much responsibility, which can lead to burnout or stress. They may also struggle to set boundaries, feeling obligated to help even when it is not their job, causing them to neglect their own needs and well-being.</p>
+                        <h3>Similar:</h3>
+                        <p>Baguette: Breadstick&#39;s focus on support and nurturing complements Baguette&#39;s drive for order and structure, creating a well-organised and supportive classroom environment.</p>
+                        <p>White Bread: Both Breadstick&#39;s nurturing approach and White Bread&#39;s relatability foster a sense of belonging and support, making the classroom feel inclusive and empathetic.</p>
+                        <h3>Opposites:</h3>
+                        <p>Bagel: Breadstick&#39;s emphasis on stability and support can conflict with Bagel&#39;s desire to challenge rules and disrupt norms, leading to potential disagreements.</p>
+                        <p>Flatbread: Breadstick&#39;s preference for consistency and emotional support may conflict with Flatbread&#39;s drive for transformation and change, leading to differing approaches in how they handle challenges and group dynamics in the classroom.</p>`;
+                    break;
+            }
+
+            resultContainer.appendChild(leftColumn);
+            resultContainer.appendChild(rightColumn);
+            document.getElementById('result').appendChild(resultContainer);
+        }
+
+        loadQuiz();
+    </script>
+</body>
+</html>
