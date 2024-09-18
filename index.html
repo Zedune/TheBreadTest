@@ -86,11 +86,6 @@
     </div>
     <div id="result" class="results"></div>
 
-    <audio id="background-music" loop></audio>
-        <source src="Audio/music.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
-
     <script>
         const questions = [
             { question: "When someone compliments me, I feel more motivated to complete work.<br>e.g. Someone compliments your hands or hair.", options: ["Never", "Rarely", "Sometimes", "Usually", "Always"], scores: [-4, -2, 0, 2, 4], type: 'a' }, // Challah Questions
@@ -171,11 +166,6 @@
         ];
 
         let currentQuestionIndex = 0;
-        
-        window.onload = function() {
-            var audio = document.getElementById('background-music');
-            audio.play();
-        };
 
         function startQuiz() {
             document.querySelector('.menu').style.display = 'none';
