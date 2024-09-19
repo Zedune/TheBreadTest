@@ -21,12 +21,12 @@
         .wobble {
             display: inline-block;
             animation: wobble 1s infinite;
-            position: absolute; /* Positioning the image */
-            bottom: 10%; /* Adjust as needed */
-            left: 10%; /* Adjust as needed */
-            transform: translate(-50%, -50%); /* Center the image */
-            width: 400px; /* Set the width */
-            height: auto; /* Maintain aspect ratio */
+            position: absolute; 
+            bottom: 10%;
+            left: 10%; 
+            transform: translate(-50%, -50%); 
+            width: 400px; 
+            height: auto;
         }
         body {
             display: flex;
@@ -130,8 +130,13 @@
             <button type="button" onclick="submitQuiz()">Submit</button>
         </div>
     </div>
-    <div id="result" class="results"></div>
+    <div id="result" class="results" style="display: none;"></div>
+    <div id="loading" class="loading" style="display: none;">
+        <img src="Images/detresult.png" alt="Loading...">
+        <audio id="loading-audio"></audio>
+    </div>
     <audio id="audio" loop></audio>
+    <audio id="effects"</audio>
 
     <script>
         const questions = [
@@ -304,227 +309,234 @@
             scoreComparisons.sort((x, y) => y.value - x.value);
 
             document.querySelector('.quiz').style.display = 'none';
-            document.querySelector('.results').style.display = 'block';
+            document.querySelector('.loading').style.display = 'block';
 
-            const resultContainer = document.createElement('div');
-            resultContainer.className = 'result-container';
-
-            const leftColumn = document.createElement('div');
-            leftColumn.className = 'result-column';
-            const rightColumn = document.createElement('div');
-            rightColumn.className = 'result-column';
-        
-            switch (comparisons[0].name) {
-                case 'Vi':
-                    leftColumn.innerHTML = 
-                        `<h2>Type: ${scoreComparisons[0].name}-Vi</h2>
-                        <h3>Highest Learning Model: Visual Learner</h3>
-                        <p>Visual learners work best when activities are engaged by images, charts, or visual material. They think through images rather than words when working through activities, often finding it easier to see the bigger picture. Visual learners are encouraged to create mind maps, drawings, or diagrams of information that needs to be memorised and to construct a visual representation of information being taught in classrooms. Visual learners may struggle to memorise smaller details or read paragraphs for a long duration.</p>
-                        <img src="Images/${scoreComparisons[0].name}.png" alt="Wobbling Image" class="wobble">`;
-                    break;
-                case 'K':
-                    leftColumn.innerHTML = 
-                        `<h2>Type: ${scoreComparisons[0].name}-K</h3>
-                        <h3>Highest Learning Model: Kinesthetic Learner</h3>
-                        <p>This learning style is hands-on, practical, and movement-oriented. These learners prefer physical, direct interaction with learning materials. They perform at their best when given the opportunity to &#39;do&#39; rather than listen or watch. In the classroom, these learners thrive through hands-on activities such as experiments, building models, or mapping out concepts using hand-drawn diagrams. They are likely to struggle in classroom settings which involve lectures and videos that go on for a long period of time. In these cases, they may become inattentive in class or even disruptive.</p>
-                        <img src="Images/${scoreComparisons[0].name}.png" alt="Wobbling Image" class="wobble">`;
-                    break;
-                case 'I':
-                    leftColumn.innerHTML = 
-                        `<h2>Type: ${scoreComparisons[0].name}-I</h2>
-                        <h3>Highest Learning Model: Interpersonal.</h3>
-                        <p>Social and collaborative, interpersonal learners enjoy working in groups and discussing ideas as a class. They excel when given opportunities to engage in debates, teamwork, and collaborative problem-solving activities. They often take leadership roles in group settings and enjoy helping others understand concepts. Given their highly social learning style, these learners are easily distracted and can become sidetracked easily when working with peers. Additionally, they may struggle in individual tasks or exam settings.</p>
-                        <img src="Images/${scoreComparisons[0].name}.png" alt="Wobbling Image" class="wobble">`;
-                    break;
-                case 'Ve':
-                    leftColumn.innerHTML = 
-                        `<h2>Type: ${scoreComparisons[0].name}-Ve</h2>
-                        <h3>Highest Learning Model: Verbal Linguistic.</h3
-                        <p>These learners enjoy learning through both written and spoken words. Naturally drawn to language, they excel in activities like reading, writing essays, storytelling, and engaging in debates. Learning techniques such as mnemonics, creating videos, and reciting palm cards work really well with these learners. Verbal-Linguistic learners dislike silence, and mathematics is probably their natural enemy.</p>
-                        <img src="Images/${scoreComparisons[0].name}.png" alt="Wobbling Image" class="wobble">`;
-                    break;
-            }
-            
             const audio = document.getElementById('audio');
-            audio.pause();
-            audio.currentTime = 0;
+                audio.pause();
+                audio.currentTime = 0;
             
-            switch (scoreComparisons[0].name) {
-                case 'Challah':
-                    rightColumn.innerHTML =
-                        `<h2>Challah</h2>
-                        <p>Challah archetypes are often the centre of their friend groups, always willing to lend an ear, offer support, or share a laugh. In class, these students are not afraid to share their feelings or thoughts, especially in discussions that involve personal reflections or topics that resonate with them emotionally. They take pride in creating work that is not only correct but also beautiful and meaningful, they may decorate their assignments with extra flair or put thought into making presentations visually appealing. Their desire to connect can drive them to participate actively, especially in group activities that involve personal sharing but can sometimes become distracted by friends and conversations over time. Their deep investment in relationships can lead to them blurring boundaries, such as oversharing or taking others&#39; emotional burdens.</p>
-                        <h3>Similar:</h3>
-                        <p>Sourdough: Challah&#39;s emphasis on building deep, meaningful relationships aligns well with Sourdough&#39;s ability to bring joy and light-heartedness, creating a classroom environment where emotional connections are strengthened through shared laughter and fun.</p>
-                        <p>Rye Bread: Challah&#39;s nurturing approach complements Rye Bread&#39;s protective instincts, fostering a classroom atmosphere where students feel both supported and inspired to take on challenges together, with a blend of care and courage.</p>
-                        <h3>Opposites:</h3>
-                        <p>Cinnamon Roll: While Challah seeks deep emotional connections, Cinnamon Roll prefers to keep things light and simple. This difference can lead to misunderstandings in the classroom when Challah pushes for more depth than Cinnamon Roll is comfortable with.</p>
-                        <p>Barley Bread: Challah&#39;s focus on emotions and relationships may conflict with Barley Bread&#39;s preference for logic and objectivity, resulting in differing approaches to group work or class discussions, where Challah values personal connection and Barley Bread prioritises intellectual analysis.</p>`;
-                        document.body.style.background = 'linear-gradient(to right, #EEB997, #EE8DA4)';
-                        audio.src = 'Audio/results.mp3';
-                        audio.play();
-                        break;
-                case 'Sourdough':
-                    rightColumn.innerHTML = 
-                        `<h2>Sourdough</h2>
-                        <p>Sourdough archetypes are students who love cracking jokes or making funny remarks. They enjoy making others laugh and are quick to spot the lighter side of any situation. They prefer interactive, fun lessons that allow them to express themselves. While they are not necessarily rebellious in a serious way, Sourdough questions rules and norms through humour. Their playful nature can encourage other students to engage more, especially in otherwise dull or intimidating activities. However, Sourdough can be quite disruptive in class with their antics, making it difficult for others to focus or for the teacher to maintain control. They may struggle to take things seriously, especially when faced with assignments or topics that require a more genuine approach.</p>
-                        <h3>Similar:</h3>
-                        <p>Challah: Sourdough&#39;s humour and playfulness complement Challah&#39;s desire for emotional connections, creating a lively classroom environment where friendships are strengthened through shared laughter and fun interactions.</p>
-                        <p>White Bread: Both Sourdough and White Bread value inclusivity and connection. Sourdough uses humour to engage with others, while White Bread&#39;s relatability makes everyone feel included, fostering a welcoming and light-hearted classroom dynamic.</p>
-                        <h3>Opposites:</h3>
-                        <p>Banana Bread: Sourdough&#39;s focus on fun and entertainment can clash with Banana Bread&#39;s desire for meaningful adventures and new experiences, leading to different priorities in how they engage with classroom activities.</p>
-                        <p>Barley Barley: Sourdough&#39;s playful nature might disrupt Barley Bread&#39;s focus on deep learning and reflection, leading to friction when Sourdough seeks to lighten the mood while the Sage is more intent on serious study or thoughtful discussions.</p>`;
-                        document.body.style.background = 'linear-gradient(to right, #CFA478, #EADCD5)';
-                        audio.src = 'Audio/results.mp3';
-                        audio.play();
-                        break;
-                case 'White Bread':
-                    rightColumn.innerHTML = 
-                        `<h2>White Bread</h2>
-                        <p>White Bread archetypes value connections and friendly relationships within classroom environments. This is because of their approachability due to their non-judgmental nature and how they include everyone. White Bread archetypes usually prefer more concrete concepts and examples over abstract ones, which is great for practicality but usually lacks creativity. Teachers and peers can count on them to be dependable and to handle responsibilities effectively but would try to avoid situations where they can be given responsibility. This is because their preference for fitting in leads them to shy away from leadership positions or standing out. To keep the peace and avoid conflict, they might steer clear of controversial topics, which can limit their engagement in important debates or situations.</p>
-                        <h3>Similar:</h3>
-                        <p>Sourdough: White Bread&#39;s approachable and relatable nature pairs well with Sourdough&#39;s humour, making the classroom feel inclusive and engaging, as both enjoy connecting with peers in an easy-going and friendly manner.</p>
-                        <p>Breadsticks: Both White Bread and Breadsticks focus on creating a supportive environment. White Bread&#39;s desire for harmony complements Breadsticks&#39;s nurturing approach, resulting in a classroom where students feel safe, understood, and part of a cohesive group.</p>
-                        <h3>Opposites:</h3>
-                        <p>Banana Bread: White Bread&#39;s preference for routine and familiarity may conflict with Banana Bread&#39;s constant search for new experiences and change, leading to differing attitudes towards classroom activities that involve stepping out of comfort zones.</p>
-                        <p>Bagel: White Bread&#39;s inclination to follow rules and maintain peace contrasts with Bagel&#39;s rebellious nature, which often challenges norms. This difference can lead to tension in the classroom when White Bread seeks stability and Bagel disrupts it.</p>`;
-                        document.body.style.background = 'linear-gradient(to right, #FFE3BE, #BB3E44)';
-                        audio.src = 'Audio/Everyman.mp3';
-                        audio.play();
-                        break;
-                case 'Banana Bread':
-                    rightColumn.innerHTML = 
-                        `<h2>Banana Bread</h2>
-                        <p>Banana Bread students are curious and love to learn new things beyond the classroom, trying different activities and new challenges, preferring to work independently and often take the lead in their own learning. Their adventurous spirit helps them come up with creative solutions and helps them to better handle change. However, their curiosity and drive to learn new things result in them finding routine tasks becoming boring, getting distracted by new interests, and potentially taking on too many of their interests at once.</p>
-                        <h3>Similar:</h3>
-                        <p>Barley Bread: Banana Bread&#39;s love for adventure and new experiences aligns well with Barley Bread&#39;s quest for knowledge. Together, they can create an engaging learning environment, driven by curiosity and a desire to discover new insights.</p>
-                        <p>Bagel: Both Banana Bread and Bagel are drawn to breaking boundaries and questioning norms. Banana Bread seeks new experiences, while Bagel challenges rules, making them a bold pair in pushing the limits of classroom projects and ideas.</p>
-                        <h3>Opposites:</h3>
-                        <p>White Bread: Banana Bread&#39;s drive for adventure and novelty can conflict with White Bread&#39;s preference for comfort and routine, leading to differing attitudes toward change and risk in classroom activities.</p>
-                        <p>Sourdough: Banana Bread&#39;s focus on seeking meaningful experiences may clash with the Sourdough&#39;s playful, lighthearted approach, potentially causing friction when Banana Bread wants depth and the Sourdough prioritises fun.</p>`;
-                        document.body.style.background = 'linear-gradient(to right, #D29A85, #95555A)';
-                        audio.src = 'Audio/results.mp3';
-                        audio.play();
-                        break;
-                case 'Bagel':
-                    rightColumn.innerHTML = 
-                        `<h2>Bagel</h2>
-                        <p>Bagel archetypes in the classroom are students who like to challenge the rules and think differently. They don&#39;t enjoy being told what to do and often question why things are done a certain way. Bagel is an independent thinker who want to push boundaries and question what’s considered “normal.” This can make them creative problem solvers, but it can also lead to conflicts with teachers or classmates when they don’t follow the rules. They work best in environments where they have more flexibility with deadlines and assignment choices, and have trouble with structured lessons.</p>
-                        <h3>Similar:</h3>
-                        <p>Flatbread: Bagel and Flatbread both enjoy challenging the status quo; Bagel disrupts norms, while Flatbread transforms situations with innovative thinking. Together, they can bring about significant change in the classroom through bold and creative problem-solving.</p>
-                        <p>Banana Bread: Both Bagel and Banana Bread thrive on breaking boundaries—Bagel through rebellion and Banana Bread through new experiences. In the classroom, they push limits and encourage their peers to question established norms.</p>
-                        <h3>Opposites:</h3>
-                        <p>White Bread: Bagel&#39;s rebellious nature conflicts with White Bread&#39;s desire to fit in and maintain harmony. This contrast can lead to tension when Bagel challenges rules that White Bread prefers to follow.</p>
-                        <p>Breadsticks: Bagel&#39;s disruptive tendencies often clash with Breadsticks&#39;s focus on providing stability and support. In the classroom, Breadsticks may struggle to maintain order while Bagel pushes against it.</p>`;
-                        document.body.style.background = 'linear-gradient(to right, BlanchedAlmond, DarkSalmon)';
-                        audio.src = 'Audio/outlaw.mp3';
-                        audio.play();
-                        break;
-                case 'Flatbread':
-                    rightColumn.innerHTML = 
-                        `<h2>Flatbread</h2>
-                        <p>In a classroom setting, the Flatbread archetype is the student who always finds innovative ways to solve problems, often surprising teachers and peers with their unique perspective. They&#39;re the ones who turn a standard project into something extraordinary, using creativity and insight to transform ordinary assignments into magical outcomes. Flatbread thrives on exploring new concepts and enjoy experimenting with ideas that others might find unconventional. However, their focus on transformation and change can sometimes make them appear unpredictable and impractical. They may overlook details or the practical steps needed to implement their grand ideas, leading to frustration among peers. Their tendency to challenge norms and push boundaries can also create tension with students who prefer more structured and conventional approaches, making collaboration challenging at times.</p>
-                        <h3>Similar:</h3>
-                        <p>Rye Bread: Flatbread&#39;s innovative thinking pairs well with Rye Bread&#39;s action-oriented nature. Together in the classroom, they can inspire others through a blend of creativity and courage, tackling challenges with a mix of bold ideas and decisive actions.</p>
-                        <p>Bagel: Both the Flatbread and Bagel enjoy challenging the status quo—Flatbread through transformation and the Outlaw through rebellion. In class, they can shake things up by questioning norms and introducing new, unconventional ideas, often driving change together.</p>
-                        <h3>Opposites:</h3>
-                        <p>Baguette: Flatbread&#39;s desire for transformation can clash with Baguette&#39;s need for order and control. In the classroom, Flatbread&#39;s unpredictable nature may disrupt Baguette&#39;s structured plans, leading to disagreements over how to approach group work or manage tasks.</p>
-                        <p>Croissant: While both are creative, Flatbread focuses on transformation and practical results, whereas Croissant prioritises personal expression and exploration. This difference can lead to conflicts in group projects, as Flatbread pushes for innovation while Croissant seeks creative freedom.</p>`;
-                        document.body.style.background = 'linear-gradient(to right, #E0B0BC, #FEF3D6)';
-                        audio.src = 'Audio/results.mp3';
-                        audio.play();
-                        break;
-                case 'Rye Bread':
-                    rightColumn.innerHTML = 
-                        `<h2>Rye Bread</h2>
-                        <p>Rye Bread archetypes are driven by their desire for personal achievement and deep sense of responsibility. They tackle problems head-on and take the lead in group settings. Rye Bread students have a strong internal drive and sense of purpose, making them natural leaders. However, this can make them focus on personal achievements rather than collaboration, and they become frustrated when they do not meet their own standards. Teachers and peers can rely on Rye Bread to take initiative without avoiding uncomfortable situations. However, they are competitive and can sometimes overshadow others even though their contributions are equally valuable. Their focus on all-round excellence is good, but this can lead to burnout if they feel like they are failing to meet their high standards.</p>
-                        <h3>Similar:</h3>
-                        <p>Challah: Rye Bread&#39;s drive to take action and protect others aligns well with Challah&#39;s focus on building strong emotional connections, resulting in a supportive classroom dynamic where students feel encouraged and motivated to succeed together.</p>
-                        <p>Flatbread: Rye Bread&#39;s courage pairs nicely with Flatbread&#39;s innovative thinking. Together, they can tackle challenges in the classroom with a combination of bold action and creative problem-solving, inspiring others to think outside the box.</p>
-                        <h3>Opposites:</h3>
-                        <p>Croissant: Rye Bread&#39;s action-oriented nature may clash with Croissant&#39;s need for creative freedom and introspection, leading to differing approaches in how they tackle assignments or projects, with the Rye Bread favouring direct action and Croissant seeking more personal expression.</p>
-                        <p>Cinnamon Roll: Rye Bread&#39;s desire to face challenges and take risks might conflict with Cinnamon Roll&#39;s preference for staying in safe and familiar territory, resulting in differing attitudes toward taking bold steps in classroom activities or social interactions.</p>`;
-                        document.body.style.background = 'linear-gradient(to right, #D5C2AE, #D65341)';
-                        audio.src = 'Audio/hero.mp3';
-                        audio.play();
-                        break;
-                case 'Baguette':
-                    rightColumn.innerHTML = 
-                        `<h2>Baguette</h2>
-                        <p>Baguette archetypes have a strong sense of responsibility when placed in groups or contributing to the lesson. They value control and order in classroom environments and try to prevent chaos even if that is not their obligation. This can cause them to leave a lasting impact on their classmates, teachers and school (some may say they “peaked” in high school). Baguette exudes confidence in their ability to make decisions even when under pressure. However, their need for control can lead to the inability to delegate tasks to others. This can lead to stubbornness, resistance to change and struggle to listen to others&#39; ideas especially when in a group setting. The archetype opposite to the Baguette is the Bagel, who challenges rules and can be a disruption to other students’ learning.</p>
-                        <h3>Similar:</h3>
-                        <p>Croissant: Baguette&#39;s structure helps Croissant by providing clear guidelines for projects, allowing creative ideas to flourish within an organised framework.</p>
-                        <p>Breadsticks: Baguette&#39;s focus on rules pairs well with Breadstick&#39;s supportive nature, creating a balanced environment with clear expectations and emotional support.</p>
-                        <h3>Opposites:</h3>
-                        <p>Flatbread: Baguette&#39;s need for control can clash with Flatbread&#39;s preference for innovative methods, potentially causing friction over classroom approaches.</p>
-                        <p>Rye Bread: Baguette&#39;s emphasis on order may conflict with the Rye Bread&#39;s drive for bold, unconventional actions, leading to disagreements on leadership and problem-solving strategies.</p>`;
-                        document.body.style.background = 'linear-gradient(to right, BlanchedAlmond, DarkSalmon)';
-                        audio.src = 'Audio/results.mp3';
-                        audio.play();
-                        break;
-                case 'Croissant':
-                    rightColumn.innerHTML = 
-                        `<h2>Croissant</h2>
-                        <p>Croissant archetypes are deeply creative individuals who see the world optimistically and through a lens of possibilities. They are constantly inspired by their surroundings and have a vivid imagination that fuels their work. Croissants are driven by the need to express themselves and communicate their inner world, this can cause them to enjoy subjects like visual art, English, music and TAS because it allows them to channel their creativity. However, they tend to be perfectionists and can struggle to finish projects because they are never fully satisfied with the results. They may also struggle to take criticism because they perceive it personally or become overwhelmed by their emotions. The Baguette archetype would be the opposite of the Croissant. This is because Baguette tends to value control over creativity and strive to prevent chaos, unlike Croissant who embraces chaos.</p>
-                        <h3>Similar:</h3>
-                        <p>Baguette: Croissant appreciates Baguette&#39;s structure, as it provides the necessary boundaries to help shape their creative ideas, leading to effective collaboration in projects.</p>
-                        <p>Cinnamon Roll: Both Croissant and Cinnamon Roll enjoy exploring new perspectives. Croissant's creativity and Cinnamon Roll&#39;s optimism make for a dynamic duo, bringing fresh ideas into classroom activities.</p>
-                        <h3>Opposites:</h3>
-                        <p>Challah: Croissant&#39;s focus on individual expression may conflict with Challah&#39;s desire for deep emotional connections, leading to differing priorities in group work and social interactions.</p>
-                        <p>Rye Bread: Croissant values creative freedom and self-expression, which may clash with Rye Bread&#39;s action-oriented approach and focus on goals, potentially leading to differing views on how to tackle classroom challenges.</p>`;
-                        document.body.style.background = 'linear-gradient(to right, #FFC2A2, #CD6C4C)';
-                        audio.src = 'Audio/results.mp3';
-                        audio.play();
-                        break;
-                case 'Barley Bread':
-                    rightColumn.innerHTML = 
-                        `<h2>Barley Bread</h2>
-                        <p>Barley Bread archetypes are driven by a deep thirst for knowledge and constantly seek to expand their knowledge. They prioritise logic and reason, strive to remain objective and are often analytical in their approach to problem-solving. This allows them to find it easy to break down complex problems. Barley Bread tends to be patient in their pursuit of truth and rarely rushes to conclusions, allowing them to make well-considered decisions and are more likely to consider others' points of view. However, they can come off as arrogant and condescending, especially if they see themselves as more knowledgeable than others, this can cause them to become detached from others and be perceived as lacking empathy. Sourdough has opposing characteristics to the Barley Bread. This is because Barley Bread prioritises seriousness over playfulness, and may find Sourdough’s impulsiveness annoying.</p>
-                        <h3>Similar:</h3>
-                        <p>Cinnamon Roll: Barley Bread&#39;s wisdom and knowledge complement Barley Bread&#39;s curiosity and positive outlook, creating a classroom dynamic where questions are welcomed and learning is encouraged.</p>
-                        <p>Banana Bread: Both Barley Bread and Banana Bread are driven by a desire for discovery. barley Bread seeks knowledge and understanding, while Banana Bread craves new experiences, making them a great pair for in-depth learning and exploration in the classroom.</p>
-                        <h3>Opposites:</h3>
-                        <p>Sourdough: Barley Bread&#39;s focus on serious intellectual pursuits may clash with Sourdough&#39;s playful nature, potentially leading to tension when Barley Bread wants to concentrate, and Sourdough wants to have fun.</p>
-                        <p>White Bread: Barley Bread&#39;s preference for deep, analytical thinking might conflict with White Bread&#39;s focus on practicality and fitting in, leading to different approaches to classroom discussions and group work.</p>`;
-                        document.body.style.background = 'linear-gradient(to right, #FFE5BF, #955A43)';
-                        audio.src = 'Audio/results.mp3';
-                        audio.play();
-                        break;
-                case 'Cinnamon Roll':
-                    rightColumn.innerHTML = 
-                        `<h2>Cinnamon Roll</h2>
-                        <p>Cinnamon Roll archetypes see the world and learn through a lens of hope and goodness, having a constant sunny and uplighting outlook. They trust their teachers and classmates easily, often following instructions without questions, and preferring to go with the flow rather than cause any disagreement. They thrive on positive reinforcement and may need encouragement or validation from teachers to feel secure. They naturally work well with others and help create a collaborative and supportive group dynamic. However, they may be sensitive to criticism or harsh feedback as they are not used to conflict or negativity. Moreover, because of their overly trusting nature, they can struggle to see when someone is taking advantage of them.</p>
-                        <h3>Similar:</h3>
-                        <p>Croissant: Cinnamon Roll&#39;s optimism and open-mindedness complement Croissant&#39;s creativity, making them a great pair for imaginative projects in the classroom where new ideas are welcomed and explored.</p>
-                        <p>Barley Bread: Cinnamon Roll&#39;s curiosity aligns well with Barley Bread&#39;s wisdom, creating a classroom dynamic where learning is joyful and questions are encouraged, fostering a supportive and enlightening environment.</p>
-                        <h3>Opposites:</h3>
-                        <p>Challah: Cinnamon Roll&#39;s preference for keeping things light and avoiding deeper issues can clash with Challah&#39;s desire for deep emotional connections, leading to different approaches to friendships and social interactions in class.</p>
-                        <p>Sourdough: While both Cinnamon Roll and Sourdough enjoy having fun, Cinnamon Roll&#39;s preference for staying within safe boundaries might conflict with Sourdough&#39;s tendency to push limits and create disruptions in the classroom.</p>`;
-                        document.body.style.background = 'linear-gradient(to right, #E5B98A, #9D6147)';
-                        audio.src = 'Audio/innocent.mp3';
-                        audio.play();
-                        break;
-                case 'Breadsticks':
-                    rightColumn.innerHTML = 
-                        `<h2>Breadsticks</h2>
-                        <p>Breadsticks archetypes are quick to lend a helping hand, whether it&#39;s helping a classmate understand a lesson, sharing supplies or volunteering for classroom tasks. These behaviours show their highly empathetic nature, leading them to be good at reading the room and responding to the needs of their peers. They provide a supportive classroom atmosphere, allowing them to be strong leaders and great team players. Although Breadsticks may take too much responsibility, which can lead to burnout or stress. They may also struggle to set boundaries, feeling obligated to help even when it is not their job, causing them to neglect their own needs and well-being.</p>
-                        <h3>Similar:</h3>
-                        <p>Baguette: Breadstick&#39;s focus on support and nurturing complements Baguette&#39;s drive for order and structure, creating a well-organised and supportive classroom environment.</p>
-                        <p>White Bread: Both Breadstick&#39;s nurturing approach and White Bread&#39;s relatability foster a sense of belonging and support, making the classroom feel inclusive and empathetic.</p>
-                        <h3>Opposites:</h3>
-                        <p>Bagel: Breadstick&#39;s emphasis on stability and support can conflict with Bagel&#39;s desire to challenge rules and disrupt norms, leading to potential disagreements.</p>
-                        <p>Flatbread: Breadstick&#39;s preference for consistency and emotional support may conflict with Flatbread&#39;s drive for transformation and change, leading to differing approaches in how they handle challenges and group dynamics in the classroom.</p>`;
-                        document.body.style.background = 'linear-gradient(to right, #FFE5BF, #955A43)';
-                        audio.src = 'Audio/results.mp3';
-                        audio.play();
-                        break;
-                        
-            }
-            resultContainer.appendChild(leftColumn);
-            resultContainer.appendChild(rightColumn);
-            document.getElementById('result').appendChild(resultContainer);
-        }
+            const loadingAudio = document.getElementById('loading-audio');
+            loadingAudio.src = 'Audio/Snareroll.mp3'; 
+            loadingAudio.play();
 
+            loadingAudio.onended = function() {
+                document.querySelector('.loading').style.display = 'none';
+                document.querySelector('.results').style.display = 'block';
+                const resultContainer = document.createElement('div');
+                resultContainer.className = 'result-container';
+
+                const leftColumn = document.createElement('div');
+                leftColumn.className = 'result-column';
+                const rightColumn = document.createElement('div');
+                rightColumn.className = 'result-column';
+            
+                switch (comparisons[0].name) {
+                    case 'Vi':
+                        leftColumn.innerHTML = 
+                            `<h2>Type: ${scoreComparisons[0].name}-Vi</h2>
+                            <h3>Highest Learning Model: Visual Learner</h3>
+                            <p>Visual learners work best when activities are engaged by images, charts, or visual material. They think through images rather than words when working through activities, often finding it easier to see the bigger picture. Visual learners are encouraged to create mind maps, drawings, or diagrams of information that needs to be memorised and to construct a visual representation of information being taught in classrooms. Visual learners may struggle to memorise smaller details or read paragraphs for a long duration.</p>
+                            <img src="Images/${scoreComparisons[0].name}.png" alt="Wobbling Image" class="wobble">`;
+                        break;
+                    case 'K':
+                        leftColumn.innerHTML = 
+                            `<h2>Type: ${scoreComparisons[0].name}-K</h3>
+                            <h3>Highest Learning Model: Kinesthetic Learner</h3>
+                            <p>This learning style is hands-on, practical, and movement-oriented. These learners prefer physical, direct interaction with learning materials. They perform at their best when given the opportunity to &#39;do&#39; rather than listen or watch. In the classroom, these learners thrive through hands-on activities such as experiments, building models, or mapping out concepts using hand-drawn diagrams. They are likely to struggle in classroom settings which involve lectures and videos that go on for a long period of time. In these cases, they may become inattentive in class or even disruptive.</p>
+                            <img src="Images/${scoreComparisons[0].name}.png" alt="Wobbling Image" class="wobble">`;
+                        break;
+                    case 'I':
+                        leftColumn.innerHTML = 
+                            `<h2>Type: ${scoreComparisons[0].name}-I</h2>
+                            <h3>Highest Learning Model: Interpersonal.</h3>
+                            <p>Social and collaborative, interpersonal learners enjoy working in groups and discussing ideas as a class. They excel when given opportunities to engage in debates, teamwork, and collaborative problem-solving activities. They often take leadership roles in group settings and enjoy helping others understand concepts. Given their highly social learning style, these learners are easily distracted and can become sidetracked easily when working with peers. Additionally, they may struggle in individual tasks or exam settings.</p>
+                            <img src="Images/${scoreComparisons[0].name}.png" alt="Wobbling Image" class="wobble">`;
+                        break;
+                    case 'Ve':
+                        leftColumn.innerHTML = 
+                            `<h2>Type: ${scoreComparisons[0].name}-Ve</h2>
+                            <h3>Highest Learning Model: Verbal Linguistic.</h3
+                            <p>These learners enjoy learning through both written and spoken words. Naturally drawn to language, they excel in activities like reading, writing essays, storytelling, and engaging in debates. Learning techniques such as mnemonics, creating videos, and reciting palm cards work really well with these learners. Verbal-Linguistic learners dislike silence, and mathematics is probably their natural enemy.</p>
+                            <img src="Images/${scoreComparisons[0].name}.png" alt="Wobbling Image" class="wobble">`;
+                        break;
+                }
+                
+                switch (scoreComparisons[0].name) {
+                    case 'Challah':
+                        rightColumn.innerHTML =
+                            `<h2>Challah</h2>
+                            <p>Challah archetypes are often the centre of their friend groups, always willing to lend an ear, offer support, or share a laugh. In class, these students are not afraid to share their feelings or thoughts, especially in discussions that involve personal reflections or topics that resonate with them emotionally. They take pride in creating work that is not only correct but also beautiful and meaningful, they may decorate their assignments with extra flair or put thought into making presentations visually appealing. Their desire to connect can drive them to participate actively, especially in group activities that involve personal sharing but can sometimes become distracted by friends and conversations over time. Their deep investment in relationships can lead to them blurring boundaries, such as oversharing or taking others&#39; emotional burdens.</p>
+                            <h3>Similar:</h3>
+                            <p>Sourdough: Challah&#39;s emphasis on building deep, meaningful relationships aligns well with Sourdough&#39;s ability to bring joy and light-heartedness, creating a classroom environment where emotional connections are strengthened through shared laughter and fun.</p>
+                            <p>Rye Bread: Challah&#39;s nurturing approach complements Rye Bread&#39;s protective instincts, fostering a classroom atmosphere where students feel both supported and inspired to take on challenges together, with a blend of care and courage.</p>
+                            <h3>Opposites:</h3>
+                            <p>Cinnamon Roll: While Challah seeks deep emotional connections, Cinnamon Roll prefers to keep things light and simple. This difference can lead to misunderstandings in the classroom when Challah pushes for more depth than Cinnamon Roll is comfortable with.</p>
+                            <p>Barley Bread: Challah&#39;s focus on emotions and relationships may conflict with Barley Bread&#39;s preference for logic and objectivity, resulting in differing approaches to group work or class discussions, where Challah values personal connection and Barley Bread prioritises intellectual analysis.</p>`;
+                            document.body.style.background = 'linear-gradient(to right, #EEB997, #EE8DA4)';
+                            audio.src = 'Audio/results.mp3';
+                            audio.play();
+                            break;
+                    case 'Sourdough':
+                        rightColumn.innerHTML = 
+                            `<h2>Sourdough</h2>
+                            <p>Sourdough archetypes are students who love cracking jokes or making funny remarks. They enjoy making others laugh and are quick to spot the lighter side of any situation. They prefer interactive, fun lessons that allow them to express themselves. While they are not necessarily rebellious in a serious way, Sourdough questions rules and norms through humour. Their playful nature can encourage other students to engage more, especially in otherwise dull or intimidating activities. However, Sourdough can be quite disruptive in class with their antics, making it difficult for others to focus or for the teacher to maintain control. They may struggle to take things seriously, especially when faced with assignments or topics that require a more genuine approach.</p>
+                            <h3>Similar:</h3>
+                            <p>Challah: Sourdough&#39;s humour and playfulness complement Challah&#39;s desire for emotional connections, creating a lively classroom environment where friendships are strengthened through shared laughter and fun interactions.</p>
+                            <p>White Bread: Both Sourdough and White Bread value inclusivity and connection. Sourdough uses humour to engage with others, while White Bread&#39;s relatability makes everyone feel included, fostering a welcoming and light-hearted classroom dynamic.</p>
+                            <h3>Opposites:</h3>
+                            <p>Banana Bread: Sourdough&#39;s focus on fun and entertainment can clash with Banana Bread&#39;s desire for meaningful adventures and new experiences, leading to different priorities in how they engage with classroom activities.</p>
+                            <p>Barley Barley: Sourdough&#39;s playful nature might disrupt Barley Bread&#39;s focus on deep learning and reflection, leading to friction when Sourdough seeks to lighten the mood while the Sage is more intent on serious study or thoughtful discussions.</p>`;
+                            document.body.style.background = 'linear-gradient(to right, #CFA478, #EADCD5)';
+                            audio.src = 'Audio/results.mp3';
+                            audio.play();
+                            break;
+                    case 'White Bread':
+                        rightColumn.innerHTML = 
+                            `<h2>White Bread</h2>
+                            <p>White Bread archetypes value connections and friendly relationships within classroom environments. This is because of their approachability due to their non-judgmental nature and how they include everyone. White Bread archetypes usually prefer more concrete concepts and examples over abstract ones, which is great for practicality but usually lacks creativity. Teachers and peers can count on them to be dependable and to handle responsibilities effectively but would try to avoid situations where they can be given responsibility. This is because their preference for fitting in leads them to shy away from leadership positions or standing out. To keep the peace and avoid conflict, they might steer clear of controversial topics, which can limit their engagement in important debates or situations.</p>
+                            <h3>Similar:</h3>
+                            <p>Sourdough: White Bread&#39;s approachable and relatable nature pairs well with Sourdough&#39;s humour, making the classroom feel inclusive and engaging, as both enjoy connecting with peers in an easy-going and friendly manner.</p>
+                            <p>Breadsticks: Both White Bread and Breadsticks focus on creating a supportive environment. White Bread&#39;s desire for harmony complements Breadsticks&#39;s nurturing approach, resulting in a classroom where students feel safe, understood, and part of a cohesive group.</p>
+                            <h3>Opposites:</h3>
+                            <p>Banana Bread: White Bread&#39;s preference for routine and familiarity may conflict with Banana Bread&#39;s constant search for new experiences and change, leading to differing attitudes towards classroom activities that involve stepping out of comfort zones.</p>
+                            <p>Bagel: White Bread&#39;s inclination to follow rules and maintain peace contrasts with Bagel&#39;s rebellious nature, which often challenges norms. This difference can lead to tension in the classroom when White Bread seeks stability and Bagel disrupts it.</p>`;
+                            document.body.style.background = 'linear-gradient(to right, #FFE3BE, #BB3E44)';
+                            audio.src = 'Audio/Everyman.mp3';
+                            audio.play();
+                            break;
+                    case 'Banana Bread':
+                        rightColumn.innerHTML = 
+                            `<h2>Banana Bread</h2>
+                            <p>Banana Bread students are curious and love to learn new things beyond the classroom, trying different activities and new challenges, preferring to work independently and often take the lead in their own learning. Their adventurous spirit helps them come up with creative solutions and helps them to better handle change. However, their curiosity and drive to learn new things result in them finding routine tasks becoming boring, getting distracted by new interests, and potentially taking on too many of their interests at once.</p>
+                            <h3>Similar:</h3>
+                            <p>Barley Bread: Banana Bread&#39;s love for adventure and new experiences aligns well with Barley Bread&#39;s quest for knowledge. Together, they can create an engaging learning environment, driven by curiosity and a desire to discover new insights.</p>
+                            <p>Bagel: Both Banana Bread and Bagel are drawn to breaking boundaries and questioning norms. Banana Bread seeks new experiences, while Bagel challenges rules, making them a bold pair in pushing the limits of classroom projects and ideas.</p>
+                            <h3>Opposites:</h3>
+                            <p>White Bread: Banana Bread&#39;s drive for adventure and novelty can conflict with White Bread&#39;s preference for comfort and routine, leading to differing attitudes toward change and risk in classroom activities.</p>
+                            <p>Sourdough: Banana Bread&#39;s focus on seeking meaningful experiences may clash with the Sourdough&#39;s playful, lighthearted approach, potentially causing friction when Banana Bread wants depth and the Sourdough prioritises fun.</p>`;
+                            document.body.style.background = 'linear-gradient(to right, #D29A85, #95555A)';
+                            audio.src = 'Audio/results.mp3';
+                            audio.play();
+                            break;
+                    case 'Bagel':
+                        rightColumn.innerHTML = 
+                            `<h2>Bagel</h2>
+                            <p>Bagel archetypes in the classroom are students who like to challenge the rules and think differently. They don&#39;t enjoy being told what to do and often question why things are done a certain way. Bagel is an independent thinker who want to push boundaries and question what’s considered “normal.” This can make them creative problem solvers, but it can also lead to conflicts with teachers or classmates when they don’t follow the rules. They work best in environments where they have more flexibility with deadlines and assignment choices, and have trouble with structured lessons.</p>
+                            <h3>Similar:</h3>
+                            <p>Flatbread: Bagel and Flatbread both enjoy challenging the status quo; Bagel disrupts norms, while Flatbread transforms situations with innovative thinking. Together, they can bring about significant change in the classroom through bold and creative problem-solving.</p>
+                            <p>Banana Bread: Both Bagel and Banana Bread thrive on breaking boundaries—Bagel through rebellion and Banana Bread through new experiences. In the classroom, they push limits and encourage their peers to question established norms.</p>
+                            <h3>Opposites:</h3>
+                            <p>White Bread: Bagel&#39;s rebellious nature conflicts with White Bread&#39;s desire to fit in and maintain harmony. This contrast can lead to tension when Bagel challenges rules that White Bread prefers to follow.</p>
+                            <p>Breadsticks: Bagel&#39;s disruptive tendencies often clash with Breadsticks&#39;s focus on providing stability and support. In the classroom, Breadsticks may struggle to maintain order while Bagel pushes against it.</p>`;
+                            document.body.style.background = 'linear-gradient(to right, BlanchedAlmond, DarkSalmon)';
+                            audio.src = 'Audio/outlaw.mp3';
+                            audio.play();
+                            break;
+                    case 'Flatbread':
+                        rightColumn.innerHTML = 
+                            `<h2>Flatbread</h2>
+                            <p>In a classroom setting, the Flatbread archetype is the student who always finds innovative ways to solve problems, often surprising teachers and peers with their unique perspective. They&#39;re the ones who turn a standard project into something extraordinary, using creativity and insight to transform ordinary assignments into magical outcomes. Flatbread thrives on exploring new concepts and enjoy experimenting with ideas that others might find unconventional. However, their focus on transformation and change can sometimes make them appear unpredictable and impractical. They may overlook details or the practical steps needed to implement their grand ideas, leading to frustration among peers. Their tendency to challenge norms and push boundaries can also create tension with students who prefer more structured and conventional approaches, making collaboration challenging at times.</p>
+                            <h3>Similar:</h3>
+                            <p>Rye Bread: Flatbread&#39;s innovative thinking pairs well with Rye Bread&#39;s action-oriented nature. Together in the classroom, they can inspire others through a blend of creativity and courage, tackling challenges with a mix of bold ideas and decisive actions.</p>
+                            <p>Bagel: Both the Flatbread and Bagel enjoy challenging the status quo—Flatbread through transformation and the Outlaw through rebellion. In class, they can shake things up by questioning norms and introducing new, unconventional ideas, often driving change together.</p>
+                            <h3>Opposites:</h3>
+                            <p>Baguette: Flatbread&#39;s desire for transformation can clash with Baguette&#39;s need for order and control. In the classroom, Flatbread&#39;s unpredictable nature may disrupt Baguette&#39;s structured plans, leading to disagreements over how to approach group work or manage tasks.</p>
+                            <p>Croissant: While both are creative, Flatbread focuses on transformation and practical results, whereas Croissant prioritises personal expression and exploration. This difference can lead to conflicts in group projects, as Flatbread pushes for innovation while Croissant seeks creative freedom.</p>`;
+                            document.body.style.background = 'linear-gradient(to right, #E0B0BC, #FEF3D6)';
+                            audio.src = 'Audio/results.mp3';
+                            audio.play();
+                            break;
+                    case 'Rye Bread':
+                        rightColumn.innerHTML = 
+                            `<h2>Rye Bread</h2>
+                            <p>Rye Bread archetypes are driven by their desire for personal achievement and deep sense of responsibility. They tackle problems head-on and take the lead in group settings. Rye Bread students have a strong internal drive and sense of purpose, making them natural leaders. However, this can make them focus on personal achievements rather than collaboration, and they become frustrated when they do not meet their own standards. Teachers and peers can rely on Rye Bread to take initiative without avoiding uncomfortable situations. However, they are competitive and can sometimes overshadow others even though their contributions are equally valuable. Their focus on all-round excellence is good, but this can lead to burnout if they feel like they are failing to meet their high standards.</p>
+                            <h3>Similar:</h3>
+                            <p>Challah: Rye Bread&#39;s drive to take action and protect others aligns well with Challah&#39;s focus on building strong emotional connections, resulting in a supportive classroom dynamic where students feel encouraged and motivated to succeed together.</p>
+                            <p>Flatbread: Rye Bread&#39;s courage pairs nicely with Flatbread&#39;s innovative thinking. Together, they can tackle challenges in the classroom with a combination of bold action and creative problem-solving, inspiring others to think outside the box.</p>
+                            <h3>Opposites:</h3>
+                            <p>Croissant: Rye Bread&#39;s action-oriented nature may clash with Croissant&#39;s need for creative freedom and introspection, leading to differing approaches in how they tackle assignments or projects, with the Rye Bread favouring direct action and Croissant seeking more personal expression.</p>
+                            <p>Cinnamon Roll: Rye Bread&#39;s desire to face challenges and take risks might conflict with Cinnamon Roll&#39;s preference for staying in safe and familiar territory, resulting in differing attitudes toward taking bold steps in classroom activities or social interactions.</p>`;
+                            document.body.style.background = 'linear-gradient(to right, #D5C2AE, #D65341)';
+                            audio.src = 'Audio/hero.mp3';
+                            audio.play();
+                            break;
+                    case 'Baguette':
+                        rightColumn.innerHTML = 
+                            `<h2>Baguette</h2>
+                            <p>Baguette archetypes have a strong sense of responsibility when placed in groups or contributing to the lesson. They value control and order in classroom environments and try to prevent chaos even if that is not their obligation. This can cause them to leave a lasting impact on their classmates, teachers and school (some may say they “peaked” in high school). Baguette exudes confidence in their ability to make decisions even when under pressure. However, their need for control can lead to the inability to delegate tasks to others. This can lead to stubbornness, resistance to change and struggle to listen to others&#39; ideas especially when in a group setting. The archetype opposite to the Baguette is the Bagel, who challenges rules and can be a disruption to other students’ learning.</p>
+                            <h3>Similar:</h3>
+                            <p>Croissant: Baguette&#39;s structure helps Croissant by providing clear guidelines for projects, allowing creative ideas to flourish within an organised framework.</p>
+                            <p>Breadsticks: Baguette&#39;s focus on rules pairs well with Breadstick&#39;s supportive nature, creating a balanced environment with clear expectations and emotional support.</p>
+                            <h3>Opposites:</h3>
+                            <p>Flatbread: Baguette&#39;s need for control can clash with Flatbread&#39;s preference for innovative methods, potentially causing friction over classroom approaches.</p>
+                            <p>Rye Bread: Baguette&#39;s emphasis on order may conflict with the Rye Bread&#39;s drive for bold, unconventional actions, leading to disagreements on leadership and problem-solving strategies.</p>`;
+                            document.body.style.background = 'linear-gradient(to right, BlanchedAlmond, DarkSalmon)';
+                            audio.src = 'Audio/results.mp3';
+                            audio.play();
+                            break;
+                    case 'Croissant':
+                        rightColumn.innerHTML = 
+                            `<h2>Croissant</h2>
+                            <p>Croissant archetypes are deeply creative individuals who see the world optimistically and through a lens of possibilities. They are constantly inspired by their surroundings and have a vivid imagination that fuels their work. Croissants are driven by the need to express themselves and communicate their inner world, this can cause them to enjoy subjects like visual art, English, music and TAS because it allows them to channel their creativity. However, they tend to be perfectionists and can struggle to finish projects because they are never fully satisfied with the results. They may also struggle to take criticism because they perceive it personally or become overwhelmed by their emotions. The Baguette archetype would be the opposite of the Croissant. This is because Baguette tends to value control over creativity and strive to prevent chaos, unlike Croissant who embraces chaos.</p>
+                            <h3>Similar:</h3>
+                            <p>Baguette: Croissant appreciates Baguette&#39;s structure, as it provides the necessary boundaries to help shape their creative ideas, leading to effective collaboration in projects.</p>
+                            <p>Cinnamon Roll: Both Croissant and Cinnamon Roll enjoy exploring new perspectives. Croissant's creativity and Cinnamon Roll&#39;s optimism make for a dynamic duo, bringing fresh ideas into classroom activities.</p>
+                            <h3>Opposites:</h3>
+                            <p>Challah: Croissant&#39;s focus on individual expression may conflict with Challah&#39;s desire for deep emotional connections, leading to differing priorities in group work and social interactions.</p>
+                            <p>Rye Bread: Croissant values creative freedom and self-expression, which may clash with Rye Bread&#39;s action-oriented approach and focus on goals, potentially leading to differing views on how to tackle classroom challenges.</p>`;
+                            document.body.style.background = 'linear-gradient(to right, #FFC2A2, #CD6C4C)';
+                            audio.src = 'Audio/results.mp3';
+                            audio.play();
+                            break;
+                    case 'Barley Bread':
+                        rightColumn.innerHTML = 
+                            `<h2>Barley Bread</h2>
+                            <p>Barley Bread archetypes are driven by a deep thirst for knowledge and constantly seek to expand their knowledge. They prioritise logic and reason, strive to remain objective and are often analytical in their approach to problem-solving. This allows them to find it easy to break down complex problems. Barley Bread tends to be patient in their pursuit of truth and rarely rushes to conclusions, allowing them to make well-considered decisions and are more likely to consider others' points of view. However, they can come off as arrogant and condescending, especially if they see themselves as more knowledgeable than others, this can cause them to become detached from others and be perceived as lacking empathy. Sourdough has opposing characteristics to the Barley Bread. This is because Barley Bread prioritises seriousness over playfulness, and may find Sourdough’s impulsiveness annoying.</p>
+                            <h3>Similar:</h3>
+                            <p>Cinnamon Roll: Barley Bread&#39;s wisdom and knowledge complement Barley Bread&#39;s curiosity and positive outlook, creating a classroom dynamic where questions are welcomed and learning is encouraged.</p>
+                            <p>Banana Bread: Both Barley Bread and Banana Bread are driven by a desire for discovery. barley Bread seeks knowledge and understanding, while Banana Bread craves new experiences, making them a great pair for in-depth learning and exploration in the classroom.</p>
+                            <h3>Opposites:</h3>
+                            <p>Sourdough: Barley Bread&#39;s focus on serious intellectual pursuits may clash with Sourdough&#39;s playful nature, potentially leading to tension when Barley Bread wants to concentrate, and Sourdough wants to have fun.</p>
+                            <p>White Bread: Barley Bread&#39;s preference for deep, analytical thinking might conflict with White Bread&#39;s focus on practicality and fitting in, leading to different approaches to classroom discussions and group work.</p>`;
+                            document.body.style.background = 'linear-gradient(to right, #FFE5BF, #955A43)';
+                            audio.src = 'Audio/results.mp3';
+                            audio.play();
+                            break;
+                    case 'Cinnamon Roll':
+                        rightColumn.innerHTML = 
+                            `<h2>Cinnamon Roll</h2>
+                            <p>Cinnamon Roll archetypes see the world and learn through a lens of hope and goodness, having a constant sunny and uplighting outlook. They trust their teachers and classmates easily, often following instructions without questions, and preferring to go with the flow rather than cause any disagreement. They thrive on positive reinforcement and may need encouragement or validation from teachers to feel secure. They naturally work well with others and help create a collaborative and supportive group dynamic. However, they may be sensitive to criticism or harsh feedback as they are not used to conflict or negativity. Moreover, because of their overly trusting nature, they can struggle to see when someone is taking advantage of them.</p>
+                            <h3>Similar:</h3>
+                            <p>Croissant: Cinnamon Roll&#39;s optimism and open-mindedness complement Croissant&#39;s creativity, making them a great pair for imaginative projects in the classroom where new ideas are welcomed and explored.</p>
+                            <p>Barley Bread: Cinnamon Roll&#39;s curiosity aligns well with Barley Bread&#39;s wisdom, creating a classroom dynamic where learning is joyful and questions are encouraged, fostering a supportive and enlightening environment.</p>
+                            <h3>Opposites:</h3>
+                            <p>Challah: Cinnamon Roll&#39;s preference for keeping things light and avoiding deeper issues can clash with Challah&#39;s desire for deep emotional connections, leading to different approaches to friendships and social interactions in class.</p>
+                            <p>Sourdough: While both Cinnamon Roll and Sourdough enjoy having fun, Cinnamon Roll&#39;s preference for staying within safe boundaries might conflict with Sourdough&#39;s tendency to push limits and create disruptions in the classroom.</p>`;
+                            document.body.style.background = 'linear-gradient(to right, #E5B98A, #9D6147)';
+                            audio.src = 'Audio/innocent.mp3';
+                            audio.play();
+                            break;
+                    case 'Breadsticks':
+                        rightColumn.innerHTML = 
+                            `<h2>Breadsticks</h2>
+                            <p>Breadsticks archetypes are quick to lend a helping hand, whether it&#39;s helping a classmate understand a lesson, sharing supplies or volunteering for classroom tasks. These behaviours show their highly empathetic nature, leading them to be good at reading the room and responding to the needs of their peers. They provide a supportive classroom atmosphere, allowing them to be strong leaders and great team players. Although Breadsticks may take too much responsibility, which can lead to burnout or stress. They may also struggle to set boundaries, feeling obligated to help even when it is not their job, causing them to neglect their own needs and well-being.</p>
+                            <h3>Similar:</h3>
+                            <p>Baguette: Breadstick&#39;s focus on support and nurturing complements Baguette&#39;s drive for order and structure, creating a well-organised and supportive classroom environment.</p>
+                            <p>White Bread: Both Breadstick&#39;s nurturing approach and White Bread&#39;s relatability foster a sense of belonging and support, making the classroom feel inclusive and empathetic.</p>
+                            <h3>Opposites:</h3>
+                            <p>Bagel: Breadstick&#39;s emphasis on stability and support can conflict with Bagel&#39;s desire to challenge rules and disrupt norms, leading to potential disagreements.</p>
+                            <p>Flatbread: Breadstick&#39;s preference for consistency and emotional support may conflict with Flatbread&#39;s drive for transformation and change, leading to differing approaches in how they handle challenges and group dynamics in the classroom.</p>`;
+                            document.body.style.background = 'linear-gradient(to right, #FFE5BF, #955A43)';
+                            audio.src = 'Audio/results.mp3';
+                            audio.play();
+                            break;
+                            
+                }
+                resultContainer.appendChild(leftColumn);
+                resultContainer.appendChild(rightColumn);
+                document.getElementById('result').appendChild(resultContainer);
+            }
+        }
         loadQuiz();
     </script>
 </body>
