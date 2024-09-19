@@ -1,8 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Bread Test</title>
     <style>
+        @font-face {
+            font-family: 'Bhaveshneedssleep';
+            src: url('Fonts/Bhaveshneedssleep.ttf') format('truetype');
+        }
         @keyframes wobble {
             0%, 100% {
                 transform: rotate(-10deg);
@@ -48,10 +54,33 @@
         .buttons button {
             margin: 0 10px;
         }
+
         .menu {
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center; /* Center content vertically */
+            background-image: url('Images/Menu.png');
+            background-size: cover; /* Use 'contain' if 'cover' cuts off the image */
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 50px;
+            width: 100%;
+            height: 100vh; /* Ensure the menu takes up the full viewport height */
+            color: white; /* Make the text white */
+        }
+        .menu::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            z-index: -1;
         }
         .menu button {
             margin-top: 20px;
@@ -66,6 +95,15 @@
         }
         .result-column p {
             margin: 5px 0;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            margin: 0; /* Ensure no default margin */
         }
     </style>
 </head>
@@ -85,6 +123,7 @@
         </div>
     </div>
     <div id="result" class="results"></div>
+    <audio id="audio" loop></audio>
 
     <script>
         const questions = [
@@ -262,7 +301,7 @@
             leftColumn.className = 'result-column';
             const rightColumn = document.createElement('div');
             rightColumn.className = 'result-column';
-
+        
             switch (comparisons[0].name) {
                 case 'Vi':
                     leftColumn.innerHTML = 
@@ -294,9 +333,10 @@
                     break;
             }
 
+            const audio = document.getElementById('audio');
             switch (scoreComparisons[0].name) {
                 case 'Challah':
-                    rightColumn.innerHTML = 
+                    rightColumn.innerHTML =
                         `<h2>Challah</h2>
                         <p>Challah archetypes are often the centre of their friend groups, always willing to lend an ear, offer support, or share a laugh. In class, these students are not afraid to share their feelings or thoughts, especially in discussions that involve personal reflections or topics that resonate with them emotionally. They take pride in creating work that is not only correct but also beautiful and meaningful, they may decorate their assignments with extra flair or put thought into making presentations visually appealing. Their desire to connect can drive them to participate actively, especially in group activities that involve personal sharing but can sometimes become distracted by friends and conversations over time. Their deep investment in relationships can lead to them blurring boundaries, such as oversharing or taking others&#39; emotional burdens.</p>
                         <h3>Similar:</h3>
@@ -305,6 +345,8 @@
                         <h3>Opposites:</h3>
                         <p>Cinnamon Roll: While Challah seeks deep emotional connections, Cinnamon Roll prefers to keep things light and simple. This difference can lead to misunderstandings in the classroom when Challah pushes for more depth than Cinnamon Roll is comfortable with.</p>
                         <p>Barley Bread: Challah&#39;s focus on emotions and relationships may conflict with Barley Bread&#39;s preference for logic and objectivity, resulting in differing approaches to group work or class discussions, where Challah values personal connection and Barley Bread prioritises intellectual analysis.</p>`;
+                        document.body.style.background = 'linear-gradient(to right, #EEB997, #EE8DA4)';
+                        audio.src = 'path/to/your/audio-b.mp3';
                         break;
                 case 'Sourdough':
                     rightColumn.innerHTML = 
@@ -316,7 +358,9 @@
                         <h3>Opposites:</h3>
                         <p>Banana Bread: Sourdough&#39;s focus on fun and entertainment can clash with Banana Bread&#39;s desire for meaningful adventures and new experiences, leading to different priorities in how they engage with classroom activities.</p>
                         <p>Barley Barley: Sourdough&#39;s playful nature might disrupt Barley Bread&#39;s focus on deep learning and reflection, leading to friction when Sourdough seeks to lighten the mood while the Sage is more intent on serious study or thoughtful discussions.</p>`;
-                    break;
+                        document.body.style.background = 'linear-gradient(to right, #CFA478, #EADCD5)';
+                        audio.src = 'path/to/your/audio-b.mp3';
+                        break;
                 case 'White Bread':
                     rightColumn.innerHTML = 
                         `<h2>White Bread</h2>
@@ -327,7 +371,9 @@
                         <h3>Opposites:</h3>
                         <p>Banana Bread: White Bread&#39;s preference for routine and familiarity may conflict with Banana Bread&#39;s constant search for new experiences and change, leading to differing attitudes towards classroom activities that involve stepping out of comfort zones.</p>
                         <p>Bagel: White Bread&#39;s inclination to follow rules and maintain peace contrasts with Bagel&#39;s rebellious nature, which often challenges norms. This difference can lead to tension in the classroom when White Bread seeks stability and Bagel disrupts it.</p>`;
-                    break;
+                        document.body.style.background = 'linear-gradient(to right, #FFE3BE, #BB3E44)';
+                        audio.src = 'path/to/your/audio-c.mp3';
+                        break;
                 case 'Banana Bread':
                     rightColumn.innerHTML = 
                         `<h2>Banana Bread</h2>
@@ -338,7 +384,9 @@
                         <h3>Opposites:</h3>
                         <p>White Bread: Banana Bread&#39;s drive for adventure and novelty can conflict with White Bread&#39;s preference for comfort and routine, leading to differing attitudes toward change and risk in classroom activities.</p>
                         <p>Sourdough: Banana Bread&#39;s focus on seeking meaningful experiences may clash with the Sourdough&#39;s playful, lighthearted approach, potentially causing friction when Banana Bread wants depth and the Sourdough prioritises fun.</p>`;
-                    break;
+                        document.body.style.background = 'linear-gradient(to right, #D29A85, #95555A)';
+                        audio.src = 'path/to/your/audio-c.mp3';
+                        break;
                 case 'Bagel':
                     rightColumn.innerHTML = 
                         `<h2>Bagel</h2>
@@ -349,7 +397,9 @@
                         <h3>Opposites:</h3>
                         <p>White Bread: Bagel&#39;s rebellious nature conflicts with White Bread&#39;s desire to fit in and maintain harmony. This contrast can lead to tension when Bagel challenges rules that White Bread prefers to follow.</p>
                         <p>Breadsticks: Bagel&#39;s disruptive tendencies often clash with Breadsticks&#39;s focus on providing stability and support. In the classroom, Breadsticks may struggle to maintain order while Bagel pushes against it.</p>`;
-                    break;
+                        document.body.style.background = 'linear-gradient(to right, BlanchedAlmond, DarkSalmon)';
+                        audio.src = 'path/to/your/audio-c.mp3';
+                        break;
                 case 'Flatbread':
                     rightColumn.innerHTML = 
                         `<h2>Flatbread</h2>
@@ -360,7 +410,9 @@
                         <h3>Opposites:</h3>
                         <p>Baguette: Flatbread&#39;s desire for transformation can clash with Baguette&#39;s need for order and control. In the classroom, Flatbread&#39;s unpredictable nature may disrupt Baguette&#39;s structured plans, leading to disagreements over how to approach group work or manage tasks.</p>
                         <p>Croissant: While both are creative, Flatbread focuses on transformation and practical results, whereas Croissant prioritises personal expression and exploration. This difference can lead to conflicts in group projects, as Flatbread pushes for innovation while Croissant seeks creative freedom.</p>`;
-                    break;
+                        document.body.style.background = 'linear-gradient(to right, #E0B0BC, #FEF3D6)';
+                        audio.src = 'path/to/your/audio-c.mp3';
+                        break;
                 case 'Rye Bread':
                     rightColumn.innerHTML = 
                         `<h2>Rye Bread</h2>
@@ -371,7 +423,9 @@
                         <h3>Opposites:</h3>
                         <p>Croissant: Rye Bread&#39;s action-oriented nature may clash with Croissant&#39;s need for creative freedom and introspection, leading to differing approaches in how they tackle assignments or projects, with the Rye Bread favouring direct action and Croissant seeking more personal expression.</p>
                         <p>Cinnamon Roll: Rye Bread&#39;s desire to face challenges and take risks might conflict with Cinnamon Roll&#39;s preference for staying in safe and familiar territory, resulting in differing attitudes toward taking bold steps in classroom activities or social interactions.</p>`;
-                    break;
+                        document.body.style.background = 'linear-gradient(to right, #D5C2AE, #D65341)';
+                        audio.src = 'path/to/your/audio-c.mp3';
+                        break;
                 case 'Baguette':
                     rightColumn.innerHTML = 
                         `<h2>Baguette</h2>
@@ -382,7 +436,9 @@
                         <h3>Opposites:</h3>
                         <p>Flatbread: Baguette&#39;s need for control can clash with Flatbread&#39;s preference for innovative methods, potentially causing friction over classroom approaches.</p>
                         <p>Rye Bread: Baguette&#39;s emphasis on order may conflict with the Rye Bread&#39;s drive for bold, unconventional actions, leading to disagreements on leadership and problem-solving strategies.</p>`;
-                    break;
+                        document.body.style.background = 'linear-gradient(to right, BlanchedAlmond, DarkSalmon)';
+                        audio.src = 'path/to/your/audio-c.mp3';
+                        break;
                 case 'Croissant':
                     rightColumn.innerHTML = 
                         `<h2>Croissant</h2>
@@ -393,7 +449,9 @@
                         <h3>Opposites:</h3>
                         <p>Challah: Croissant&#39;s focus on individual expression may conflict with Challah&#39;s desire for deep emotional connections, leading to differing priorities in group work and social interactions.</p>
                         <p>Rye Bread: Croissant values creative freedom and self-expression, which may clash with Rye Bread&#39;s action-oriented approach and focus on goals, potentially leading to differing views on how to tackle classroom challenges.</p>`;
-                    break;
+                        document.body.style.background = 'linear-gradient(to right, #FFC2A2, #CD6C4C)';
+                        audio.src = 'path/to/your/audio-c.mp3';
+                        break;
                 case 'Barley Bread':
                     rightColumn.innerHTML = 
                         `<h2>Barley Bread</h2>
@@ -404,7 +462,9 @@
                         <h3>Opposites:</h3>
                         <p>Sourdough: Barley Bread&#39;s focus on serious intellectual pursuits may clash with Sourdough&#39;s playful nature, potentially leading to tension when Barley Bread wants to concentrate, and Sourdough wants to have fun.</p>
                         <p>White Bread: Barley Bread&#39;s preference for deep, analytical thinking might conflict with White Bread&#39;s focus on practicality and fitting in, leading to different approaches to classroom discussions and group work.</p>`;
-                    break;
+                        document.body.style.background = 'linear-gradient(to right, #FFE5BF, #955A43)';
+                        audio.src = 'path/to/your/audio-c.mp3';
+                        break;
                 case 'Cinnamon Roll':
                     rightColumn.innerHTML = 
                         `<h2>Cinnamon Roll</h2>
@@ -415,7 +475,9 @@
                         <h3>Opposites:</h3>
                         <p>Challah: Cinnamon Roll&#39;s preference for keeping things light and avoiding deeper issues can clash with Challah&#39;s desire for deep emotional connections, leading to different approaches to friendships and social interactions in class.</p>
                         <p>Sourdough: While both Cinnamon Roll and Sourdough enjoy having fun, Cinnamon Roll&#39;s preference for staying within safe boundaries might conflict with Sourdough&#39;s tendency to push limits and create disruptions in the classroom.</p>`;
-                    break;
+                        document.body.style.background = 'linear-gradient(to right, #E5B98A, #9D6147)';
+                        audio.src = 'path/to/your/audio-c.mp3';
+                        break;
                 case 'Breadsticks':
                     rightColumn.innerHTML = 
                         `<h2>Breadsticks</h2>
@@ -426,8 +488,12 @@
                         <h3>Opposites:</h3>
                         <p>Bagel: Breadstick&#39;s emphasis on stability and support can conflict with Bagel&#39;s desire to challenge rules and disrupt norms, leading to potential disagreements.</p>
                         <p>Flatbread: Breadstick&#39;s preference for consistency and emotional support may conflict with Flatbread&#39;s drive for transformation and change, leading to differing approaches in how they handle challenges and group dynamics in the classroom.</p>`;
-                    break;
+                        document.body.style.background = 'linear-gradient(to right, #FFE5BF, #955A43)';
+                        audio.src = 'path/to/your/audio-c.mp3';
+                        break;
+                        
             }
+            audio.play();
 
             resultContainer.appendChild(leftColumn);
             resultContainer.appendChild(rightColumn);
