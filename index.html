@@ -85,6 +85,14 @@
         .menu button {
             margin-top: 20px;
         }
+        .quiz {
+            display: none;
+            background-color: #F9F5EC;
+            width: 100%;
+            height: 100vh; 
+            padding: 50px;
+            box-sizing: border-box;
+                }           
         .result-container {
             display: flex;
             justify-content: space-between;
@@ -205,11 +213,15 @@
         ];
 
         let currentQuestionIndex = 0;
-
+        
         function startQuiz() {
             document.querySelector('.menu').style.display = 'none';
             document.querySelector('.quiz').style.display = 'block';
             loadQuiz();
+
+            const audio = document.getElementById('audio');
+            audio.src = 'Audio/final.mp3';
+            audio.play();
         }
 
         function loadQuiz() {
@@ -332,8 +344,11 @@
                         <img src="Images/${scoreComparisons[0].name}.png" alt="Wobbling Image" class="wobble">`;
                     break;
             }
-
+            
             const audio = document.getElementById('audio');
+            audio.pause();
+            audio.currentTime = 0;
+            
             switch (scoreComparisons[0].name) {
                 case 'Challah':
                     rightColumn.innerHTML =
