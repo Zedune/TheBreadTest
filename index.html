@@ -34,7 +34,7 @@
             align-items: center;
             height: 100vh;
             text-align: center;
-            font-family: 'Bhaveshneedssleep', sans-serif;
+            font-family: Arial, sans-serif;
         }
         form {
             display: inline-block;
@@ -49,10 +49,10 @@
             display: none;
         }
         .buttons {
-            margin-top: 20px;
+            margin-top: 50px;
         }
         .buttons button {
-            margin: 0 10px;
+            margin: 0 100px;
         }
 
         .menu {
@@ -131,6 +131,7 @@
         .result-column p {
             margin: 5px 0;
         }
+
         body {
             display: flex;
             justify-content: center;
@@ -146,6 +147,7 @@
     <div class="menu">
         <h1>The Bread Test</h1>
         <h3>The ALP's project on personality archetypes and learning models.... BREADIFIED :D</h3>
+        <p>There are 60 questions</p>
         <button onclick="startQuiz()">Start Quiz</button>
     </div>
     <div class="quiz" style="display: none;">
@@ -153,8 +155,8 @@
         <form id="quizForm"></form>
         <div class="buttons">
             <button type="button" onclick="prevQuestion()">Previous</button>
+            <button type="button" onclick="submitQuiz()">Submit (dont click till Question 60)</button>
             <button type="button" onclick="nextQuestion()">Next</button>
-            <button type="button" onclick="submitQuiz()">Submit</button>
         </div>
     </div>
     <div id="result" class="results" style="display: none;"></div>
